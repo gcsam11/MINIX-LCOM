@@ -4,13 +4,50 @@
 #include <stdint.h>
 
 #include "i8254.h"
-#include "utils.h"
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  uint8_t timer_port = 0;
+  uint8_t st = 0;
 
-  return 1;
+  uint16_t div = TIMER_FREQ / freq;
+  uint8_t msb_div = 0;
+  uint8_t lsb_div = 0;
+  util_get_MSB(div, &msb_div);
+  util_get_LSB(div, &lsb_div);
+
+  if (timer == 0) {
+    timer_port = TIMER_0;
+  } else if (timer == 1) {
+    timer_port = TIMER_1;
+  } else if (timer == 2) {
+    timer_port = TIMER_2;
+  } else {
+    printf("INVALID TIMER VALUE");
+  }
+
+  if (timer_get_conf(timer, &st) != F_OK) {
+    printf("AN ERROR OCURRED WHEN GETTING THE CONFIGURATION OF THE TIMER");
+    return 1;
+  }
+
+  uint8_t ctrl_wrd = timer_port | TIMER_LSB_MSB | (st &  0x0F);
+
+  if(sys_outb(TIMER_CTRL, control_word) != F_OK) {
+      printf("AN ERROR OCURRED WHEN WRITTING THE CONTROL WORD TO THE TIMER CONTROL PORT\n");
+      return 1;
+  }
+
+  if(sys_outb(timer_port, lsb_div) != F_OK) {
+      printf("AN ERROR OCURRED WHEN WRITTING LSB OF DIV TO THE TIMER\n");
+      return 1;
+  }
+
+  if(sys_outb(timer_port, msb_div) != F_OK) {
+      printf("AN ERROR OCURRED WHEN WRITTING MSB OF DIV TO THE TIMER\n");
+      return 1;
+  }
+
+  return 0;
 }
 
 int (timer_subscribe_int)(uint8_t *bit_no) {
@@ -52,7 +89,7 @@ int (timer_get_conf)(uint8_t timer, uint8_t *st) {
     printf("INVALID TIMER VALUE");
   }
   
-  if (utils_sys_inb(port, st) != F_OK) {
+  if (util_sys_inb(port, st) != F_OK) {
     printf("AN ERROR OCURRED WHEN READING THE STATUS BYTE FROM THE DESIRED TIMER\n");
     return 1;
   }
