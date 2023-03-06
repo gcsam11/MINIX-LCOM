@@ -92,7 +92,7 @@ int(timer_test_int)(uint8_t time) {
       }
   }
 
-  if (timer_unsubscribed_int() != F_OK) {
+  if (timer_unsubscribe_int() != F_OK) {
     printf("FAILED TO UNSUBSCRIBE TIMER 0 INTERRUPT\n");
     return 1;
   }

@@ -9,33 +9,44 @@ int hook_id = TIMER0_IRQ;
 uint32_t timer0_counter = 0;
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
+  if(freq < 19 || freq > TIMER_FREQ) {
+    printf("ERROR, FRQUENCY OUT OF VALID RANGE\n");
+    return 1;
+  }
+
+  uint8_t timer_selection = 0;
   uint8_t timer_port = 0;
   uint8_t st = 0;
 
   uint16_t div = TIMER_FREQ / freq;
+
   uint8_t msb_div = 0;
   uint8_t lsb_div = 0;
   util_get_MSB(div, &msb_div);
   util_get_LSB(div, &lsb_div);
-
-  if (timer == 0) {
-    timer_port = TIMER_0;
-  } else if (timer == 1) {
-    timer_port = TIMER_1;
-  } else if (timer == 2) {
-    timer_port = TIMER_2;
-  } else {
-    printf("INVALID TIMER VALUE");
-  }
 
   if (timer_get_conf(timer, &st) != F_OK) {
     printf("AN ERROR OCURRED WHEN GETTING THE CONFIGURATION OF THE TIMER");
     return 1;
   }
 
-  uint8_t ctrl_wrd = timer_port | TIMER_LSB_MSB | (st &  0x0F);
+  if (timer == 0) {
+    timer_selection = TIMER_SEL0;
+    timer_port = TIMER_0;
+  } else if (timer == 1) {
+    timer_selection = TIMER_SEL1;
+    timer_port = TIMER_1;
+  } else if (timer == 2) {
+    timer_selection = TIMER_SEL2;
+    timer_port = TIMER_2;
+  } else {
+    printf("INVALID TIMER VALUE\n");
+    return 1;
+  }
+  
+  uint8_t ctrl_wrd = (timer_selection | TIMER_LSB_MSB | (st &  0x0F));
 
-  if(sys_outb(TIMER_CTRL, control_word) != F_OK) {
+  if(sys_outb(TIMER_CTRL, ctrl_wrd) != F_OK) {
       printf("AN ERROR OCURRED WHEN WRITTING THE CONTROL WORD TO THE TIMER CONTROL PORT\n");
       return 1;
   }
@@ -66,7 +77,7 @@ int (timer_subscribe_int)(uint8_t *bit_no) {
 
 int (timer_unsubscribe_int)() {
   
-  if (sys_irqrmpolicy(&hook_id != F_OK)) {
+  if (sys_irqrmpolicy(&hook_id) != F_OK) {
     printf("FAILED TO REMOVE IRQ POLICY\n");
     return 1;
   }
@@ -114,7 +125,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
   } else if (field == tsf_initial) {
     config.in_mode = (st & TIMER_LSB_MSB) >> 4;
   } else if (field == tsf_mode) {
-    config.count_mode = (st & (BIT(1) | BIT(2) | BIT(3)) >> 1);
+    config.count_mode = (st & (BIT(1) | BIT(2) | BIT(3))) >> 1;
 
     //make values 110 and 111, equal to 2 and 3 respectively
     if (config.count_mode > 5) {
