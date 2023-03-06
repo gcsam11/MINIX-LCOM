@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+extern uint32_t timer0_counter;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -54,8 +55,47 @@ int(timer_test_time_base)(uint8_t timer, uint32_t freq) {
 }
 
 int(timer_test_int)(uint8_t time) {
-  /* To be implemented by the students */
-  printf("%s is not yet implemented!\n", __func__);
+  int ipc_status;
+  int r;
+  uint8_t irq_set;
+  message msg;
 
-  return 1;
+  if (timer_subscribe_int(&irq_set) != F_OK) {
+    printf("FAILED TO SUBSCRIBE TIMER 0 INTERRUPT\n");
+    return 1;
+  }
+  
+
+  while(time) {
+    /* Get a request message. */
+    if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
+        printf("driver_receive failed with: %d", r);
+        continue;
+    }
+
+    if (is_ipc_notify(ipc_status)) { /* received notification */
+        switch (_ENDPOINT_P(msg.m_source)) {
+            case HARDWARE: /* hardware interrupt notification */	
+                if (msg.m_notify.interrupts & irq_set) { /* subscribed interrupt */
+                    timer_int_handler();
+                    if (timer0_counter % 60 == 0) {
+                      time--;
+                      timer_print_elapsed_time();
+                    }          
+                }
+                break;
+            default:
+                break; /* no other notifications expected: do nothing */	
+        }
+    } else { /* received a standard message, not a notification */
+        /* no standard messages expected: do nothing */
+      }
+  }
+
+  if (timer_unsubscribed_int() != F_OK) {
+    printf("FAILED TO UNSUBSCRIBE TIMER 0 INTERRUPT\n");
+    return 1;
+  }
+
+  return 0;
 }
