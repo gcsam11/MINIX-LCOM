@@ -9,21 +9,14 @@ int hook_id = TIMER0_IRQ;
 uint32_t timer0_counter = 0;
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
-  if(freq < 19 || freq > TIMER_FREQ) {
-    printf("ERROR, FRQUENCY OUT OF VALID RANGE\n");
-    return 1;
-  }
-
   uint8_t timer_selection = 0;
   uint8_t timer_port = 0;
   uint8_t st = 0;
 
-  uint16_t div = TIMER_FREQ / freq;
-
-  uint8_t msb_div = 0;
-  uint8_t lsb_div = 0;
-  util_get_MSB(div, &msb_div);
-  util_get_LSB(div, &lsb_div);
+  if(freq < 19 || freq > TIMER_FREQ) {
+    printf("ERROR, FRQUENCY OUT OF VALID RANGE\n");
+    return 1;
+  }
 
   if (timer_get_conf(timer, &st) != F_OK) {
     printf("AN ERROR OCURRED WHEN GETTING THE CONFIGURATION OF THE TIMER");
@@ -44,12 +37,21 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
     return 1;
   }
   
-  uint8_t ctrl_wrd = (timer_selection | TIMER_LSB_MSB | (st &  0x0F));
+  uint8_t ctrl_wrd = (timer_selection | TIMER_LSB_MSB | ((BIT(3) | BIT(2) | BIT(1) | BIT(0)) & st));
 
-  if(sys_outb(TIMER_CTRL, ctrl_wrd) != F_OK) {
+  if(sys_outb(TIMER_CTRL, (uint32_t)ctrl_wrd) != F_OK) {
       printf("AN ERROR OCURRED WHEN WRITTING THE CONTROL WORD TO THE TIMER CONTROL PORT\n");
       return 1;
   }
+
+  uint16_t div = TIMER_FREQ / freq;
+
+  uint8_t msb_div = 0;
+  uint8_t lsb_div = 0;
+
+  util_get_MSB(div, &msb_div);
+  util_get_LSB(div, &lsb_div);
+
 
   if(sys_outb(timer_port, lsb_div) != F_OK) {
       printf("AN ERROR OCURRED WHEN WRITTING LSB OF DIV TO THE TIMER\n");
