@@ -18,22 +18,30 @@ int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
     return 1;
   }
 
-  if (timer_get_conf(timer, &st) != F_OK) {
-    printf("AN ERROR OCURRED WHEN GETTING THE CONFIGURATION OF THE TIMER");
-    return 1;
-  }
-
   if (timer == 0) {
+
     timer_selection = TIMER_SEL0;
     timer_port = TIMER_0;
+
   } else if (timer == 1) {
+
     timer_selection = TIMER_SEL1;
     timer_port = TIMER_1;
+
   } else if (timer == 2) {
+
     timer_selection = TIMER_SEL2;
     timer_port = TIMER_2;
+
   } else {
+
     printf("INVALID TIMER VALUE\n");
+    return 1;
+    
+  }
+
+  if (timer_get_conf(timer, &st) != F_OK) {
+    printf("AN ERROR OCURRED WHEN GETTING THE CONFIGURATION OF THE TIMER");
     return 1;
   }
   
