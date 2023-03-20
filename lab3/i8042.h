@@ -1,5 +1,5 @@
-#ifndef _LAB3_I8042_H_
-#define _LAB3_I8042_H_
+#ifndef _LCOM_I8042_H_
+#define _LCOM_I8042_H_
 
 #include <lcom/lcf.h>
 

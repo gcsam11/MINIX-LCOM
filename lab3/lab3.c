@@ -77,7 +77,11 @@ int(kbd_test_scan)() {
       }
   }
 
-  kbd_unsubscribe_int();
+  if (kbd_unsubscribe_int() != F_OK) {
+    printf("FAILED TO UNSUBSCRIBE KEYBOARD\n");
+    return 1;
+  }
+
   kbd_print_no_sysinb(sys_inb_cnt);
 
   return 0;
@@ -89,7 +93,7 @@ int(kbd_test_poll)() {
 
   do{
 
-    if(kbc_read_data(&scancode) != 0){
+    if(kbd_read_data(&scancode) != 0){
       tickdelay(micros_to_ticks(DELAY_US));
       continue;
     }
@@ -103,7 +107,7 @@ int(kbd_test_poll)() {
 
   } while(scancode != ESC_BREAK);
 
-  restore_keyboard_interrupts();
+  kbd_restore_interrupts();
   kbd_print_no_sysinb(sys_inb_cnt);
 
   return 0;
@@ -121,12 +125,12 @@ int(kbd_test_timed_scan)(uint8_t n) {
     return 1;
   }
 
-  if(timer_subscribe_int(&irq_timer_set)){
+  if(timer_subscribe_int(&irq_timer_set) != F_OK){
     printf("FAILED TO SUBSCRIBE KEYBOARD\n");
     return 1;
   }
   
-  while( ((timer0_counter/60.0) < n) && (scancode != ESC_BREAK) ) {
+  while( ((timer0_counter/sys_hz()) < n) && (scancode != ESC_BREAK) ) {
     /* Get a request message. */
     if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
         printf("driver_receive failed with: %d", r);
@@ -159,8 +163,16 @@ int(kbd_test_timed_scan)(uint8_t n) {
       }
   }
 
-  timer_unsubscribe_int();
-  kbd_unsubscribe_int();
+  if (kbd_unsubscribe_int() != F_OK) {
+    printf("FAILED TO UNSUBSCRIBE KEYBOARD\n");
+    return 1;
+  }
+
+  if(timer_unsubscribe_int() != F_OK){
+    printf("FAILED TO UNSUBSCRIBE KEYBOARD\n");
+    return 1;
+  } 
+
   kbd_print_no_sysinb(sys_inb_cnt);
 
   return 1;

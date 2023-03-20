@@ -8,10 +8,12 @@ int (kbd_subscribe_int)(uint8_t *bit_no);
 
 int (kbd_unsubscribe_int)();
 
-int(kbc_read_data)(uint8_t *_scancode);
-
-int (restore_keyboard_interrupts)();
+int(kbd_read_data)(uint8_t *data);
 
 void (kbc_ih)();
+
+int(kbc_issue_cmd)(int kbc_cmd_reg, uint8_t cmd);
+
+int (kbd_restore_interrupts)();
 
 #endif
