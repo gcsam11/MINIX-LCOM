@@ -141,6 +141,7 @@ int (timer_display_conf)(uint8_t timer, uint8_t st, enum timer_status_field fiel
     if (config.count_mode > 5) {
       config.count_mode = config.count_mode ^ BIT(2);
     }
+
   } else if (field == tsf_base) {
     config.bcd = st & TIMER_BCD;
   } else {
