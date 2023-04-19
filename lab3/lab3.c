@@ -175,5 +175,5 @@ int(kbd_test_timed_scan)(uint8_t n) {
 
   kbd_print_no_sysinb(sys_inb_cnt);
 
-  return 1;
+  return 0;
 }

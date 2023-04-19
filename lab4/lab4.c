@@ -187,9 +187,79 @@ int (mouse_test_async)(uint8_t idle_time) {
 }
 
 int (mouse_test_gesture)(uint8_t x_len, uint8_t tolerance) {
-    /* To be completed */
-    printf("%s: under construction\n", __func__);
-    return 1;
+    int r, ipc_status, bytes_read_cnt = 0, writting_gesture = 1;
+    uint8_t irq_set;
+    message msg;
+    struct packet pp;
+    struct mouse_ev* event;
+    struct Gesture gesture;
+    gesture.state = INITIAL;
+    gesture.delta_x = 0;
+    gesture.delta_y = 0;
+    bool store_pckt_bt = false;
+
+    if (my_mouse_enable_data_reporting() != F_OK) {
+      printf("ERROR WHILE ENABLING DATA REPORTING\n");
+      return 1;
+    }
+
+    if (mouse_subscribe_int(&irq_set) != F_OK) {
+      printf("FAILED TO SUBSCRIBE MOUSE\n");
+      return 1;
+    }
+    
+    while(writting_gesture) {
+      /* Get a request message. */
+      if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
+          printf("driver_receive failed with: %d", r);
+          continue;
+      }
+
+      if (is_ipc_notify(ipc_status)) { /* received notification */
+          switch (_ENDPOINT_P(msg.m_source)) {
+              case HARDWARE: /* hardware interrupt notification */	
+                  if (msg.m_notify.interrupts & irq_set) { /* subscribed interrupt */
+                      mouse_ih();
+
+                      if (pckt_bt & MOUSE_PCKT_3) {
+                        store_pckt_bt = true;
+                      }
+
+                      if (store_pckt_bt) {
+                        pp.bytes[bytes_read_cnt++] = pckt_bt;
+                      }
+
+                      if (bytes_read_cnt == 3) {
+                        mouse_parse_packet(&pp);
+
+                        event = mouse_detect_event(&pp);
+                        writting_gesture = mouse_gesture_matching(&gesture, event, x_len, tolerance);
+
+                        mouse_print_packet(&pp);
+                        bytes_read_cnt = 0;
+                        store_pckt_bt = false;
+                      }
+                  }
+                  break;
+              default:
+                  break; /* no other notifications expected: do nothing */	
+          }
+      } else { /* received a standard message, not a notification */
+          /* no standard messages expected: do nothing */
+        }
+    }
+
+    if (mouse_unsubscribe_int() != F_OK) {
+      printf("FAILED TO UNSUBSCRIBE MOUSE\n");
+      return 1;
+    }
+    
+    if(my_mouse_disable_data_reporting() != F_OK) {
+      printf("ERROR WHILE DISABLING DATA REPORTING\n");
+      return 1;
+    }
+
+    return 0;
 }
 
 int (mouse_test_remote)(uint16_t period, uint8_t cnt) {

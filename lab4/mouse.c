@@ -11,7 +11,7 @@ int (mouse_subscribe_int)(uint8_t *bit_no) {
     printf("FAILED TO SET MOUSE IRQ POLICY\n");
     return 1;
   }
-  
+
   return 0;
 }
 
@@ -130,4 +130,155 @@ void (mouse_parse_packet)(struct packet* pp) {
   pp->delta_y = (first_pckt_bt & MOUSE_PCKT_MSBY_DEL) ? (0xFF00 | pp->bytes[2]) : (pp->bytes[2]);
   pp->x_ov = first_pckt_bt & MOUSE_PCKT_XOVFL;
   pp->y_ov = first_pckt_bt & MOUSE_PCKT_YOVFL;
+}
+
+int (mouse_gesture_matching)(struct Gesture *gesture, struct mouse_ev *event, uint8_t x_len, uint8_t tolerance) {
+  return (*eht[event->type])(gesture, event->delta_x, event->delta_y, x_len, tolerance);
+}
+
+void (*eht[])(struct Gesture*, uint16_t, uint16_t, uint8_t, uint8_t) = {handle_LB_PRESSED, handle_LB_RELEASED, handle_RB_PRESSED, handle_RB_RELEASED, handle_BUTTON_EV, handle_MOUSE_MOV};
+
+int (handle_LB_PRESSED)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance) {
+  switch (gesture->state) {
+    case INITIAL:
+      printf("\nSTATE: INITIAL\n");
+      gesture->delta_x = 0;
+      gesture->delta_y = 0;
+      gesture->state = LEFT_SLOPE;
+      break;
+    case VERTEX:
+      printf("\nSTATE: VERTEX\n");
+      gesture->delta_x = 0;
+      gesture->delta_y = 0;
+      gesture->state = LEFT_SLOPE;
+      break;
+    case FINISHED:
+      printf("\nSTATE: FINISHED\n");
+      return 0;
+    default:
+      gesture->state = INITIAL;
+      break;
+  }
+  return 1;
+}
+
+int (handle_LB_RELEASED)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance) {
+  switch (gesture->state) {
+    case LEFT_SLOPE:
+      printf("\nSTATE: LEFT_SLOPE\n");
+      if((gesture->delta_x >= x_len) && (gesture->delta_y/gesture->delta_x) > 1) {
+          gesture->delta_x = 0;
+          gesture->delta_y = 0;
+          gesture->state = VERTEX;
+        } else gesture->state = INITIAL;
+      break;
+    case FINISHED:
+      printf("\nSTATE: FINISHED\n");
+      return 0;
+    default:
+      gesture->state = INITIAL;
+      break;
+  }
+  return 1;
+}
+
+int (handle_RB_PRESSED)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance) {
+  switch (gesture->state) {
+    case VERTEX:
+      printf("\nSTATE: VERTEX\n");
+      if(abs(gesture->delta_x) > tolerance || abs(gesture->delta_y) > tolerance) {
+          gesture->state = INITIAL;
+        } else {
+            gesture->delta_x = 0;
+            gesture->delta_y = 0;
+            gesture->state = RIGHT_SLOPE;
+          }
+      break;
+    case FINISHED:
+      printf("\nSTATE: FINISHED\n");
+      return 0;
+    default:
+      gesture->state = INITIAL;
+      break;
+  }
+  return 1;
+}
+
+int (handle_RB_RELEASED)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance) {
+  switch (gesture->state) {
+    case RIGHT_SLOPE:
+      printf("\nSTATE: RIGHT_SLOPE\n");
+      if((gesture->delta_x >= x_len) && (gesture->delta_y/gesture->delta_x) < -1) {
+          gesture->state = FINISHED;
+          return 0;
+        } else gesture->state = INITIAL;
+      break;
+    case FINISHED:
+      printf("\nSTATE: FINISHED\n");
+      return 0;
+    default:
+      gesture->state = INITIAL;
+      break;
+  }
+  return 1;
+}
+
+int (handle_BUTTON_EV)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance) {
+  switch (gesture->state) {
+    case FINISHED:
+      printf("\nSTATE: FINISHED\n");
+      return 0;
+    default:
+      gesture->state = INITIAL;
+      break;
+  }
+
+  return 1;
+}
+
+int (handle_MOUSE_MOV)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance) {
+  switch (gesture->state) {
+    case LEFT_SLOPE:
+      printf("\nSTATE: LEFT_SLOPE\n");
+      if(ev_delta_x <= 0 || ev_delta_y <= 0) {
+          if(abs(ev_delta_x) > tolerance || abs(ev_delta_y) > tolerance){
+            gesture->state = INITIAL;
+            break;
+          }
+        }
+      if(ev_delta_x != 0 && (ev_delta_y)/(ev_delta_x) <= 1) {
+        gesture->state = INITIAL;
+        } else {
+            gesture->delta_x += ev_delta_x;
+            gesture->delta_y += ev_delta_y;
+          }
+      break;
+    case VERTEX:
+      printf("\nSTATE: VERTEX\n");
+      gesture->delta_x += ev_delta_x;
+      gesture->delta_y += ev_delta_y;
+      break;
+    case RIGHT_SLOPE:
+      printf("\nSTATE: RIGHT_SLOPE\n");
+      if(ev_delta_x <= 0 || ev_delta_y >= 0) {
+          if(abs(ev_delta_x) > tolerance || abs(ev_delta_y) > tolerance){
+            gesture->state = INITIAL;
+            break;
+            }
+        }
+      if(ev_delta_x != 0 && (ev_delta_y)/(ev_delta_x) >= -1) {
+        gesture->state = INITIAL;
+        } else {
+            gesture->delta_x += ev_delta_x;
+            gesture->delta_y += ev_delta_y;
+          }
+      break;
+    case FINISHED:
+      printf("\nSTATE: FINISHED\n");
+      return 0;
+    default:
+      gesture->state = INITIAL;
+      break;
+  }
+  return 1;
 }
