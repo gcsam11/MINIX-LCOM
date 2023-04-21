@@ -27,7 +27,7 @@ Sprite *create_sprite(xpm_map_t xpm, int x, int y, int xspeed, int yspeed) {
 }
 
 void update_sprite(Sprite *sp) {
-    vg_clear_xpm(sp->x, sp->y, sp->width, sp->height, sp->map);
+    vg_clear_xpm(sp->x, sp->y, sp->width, sp->height);
 
     sp->x += sp->xspeed;
     sp->y += sp->yspeed;

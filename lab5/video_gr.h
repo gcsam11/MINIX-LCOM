@@ -15,6 +15,8 @@ int (vg_draw_rect_matrix)(uint16_t mode, uint8_t no_rectangles, uint32_t first, 
 
 int (vg_draw_xpm)(uint16_t x, uint16_t y, int width, int height, uint8_t* map);
 
-int (vg_clear_xpm)(uint16_t x, uint16_t y, int width, int height, uint8_t* map);
+int (vg_clear_xpm)(uint16_t x, uint16_t y, int width, int height);
+
+int(vg_draw_pixel)(uint8_t** ptr, uint32_t color);
 
 #endif

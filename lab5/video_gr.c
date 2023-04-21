@@ -17,11 +17,6 @@ static uint8_t blueFieldPosition;
 static void *video_mem;
 struct minix_mem_range mr;
 
-unsigned get_hres() { return h_res; }
-unsigned get_vres() { return v_res; }
-unsigned get_bitsperpixel() { return bitsPerPixel; }
-unsigned get_bytesperpixel() { return bytesPerPixel; }
-
 void* (vg_init)(uint16_t mode) {
   /* GET INFO */
   vbe_mode_info_t vmi_p;
@@ -90,21 +85,21 @@ int(vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
     uint8_t *ptr = video_mem;
     int offset = bytesPerPixel * (h_res*y + x);
     ptr += offset;
-    uint32_t _color = color;
 
     for(unsigned i = 0 ; i < len; i++) {
-      for (unsigned j = 0; j < bytesPerPixel; j++) {
-       *ptr = _color;
-        _color >>= 8;
-        ptr++;
-      }
-
-      _color = color;
-
-      if(i >= h_res) break;
+      vg_draw_pixel(&ptr, color);
     }
 
     return 0;
+}
+
+int(vg_draw_pixel)(uint8_t** ptr, uint32_t color) {
+  for (unsigned j = 0; j < bytesPerPixel; j++) {
+    **ptr = color;
+    color >>= 8;
+    (*ptr)++;
+  }
+  return 0;
 }
 
 int (vg_draw_rect_matrix)(uint16_t mode, uint8_t no_rectangles, uint32_t first, uint8_t step) {
@@ -130,24 +125,38 @@ int (vg_draw_rect_matrix)(uint16_t mode, uint8_t no_rectangles, uint32_t first, 
   return 0;
 }
 
-int (vg_draw_xpm)(uint16_t x, uint16_t y, int width, int height, uint8_t* map) {
-  for(int i = 0; i < height; i++){
-      for(int j = 0; j < width; j++){
-        vg_draw_hline((x+j), (y+i), 1, *(map + j + i*width));
-        if ((x+j) >= h_res) break; 
+int (vg_draw_xpm)(uint16_t x, uint16_t y, int xpm_image_w, int xpm_image_h, uint8_t* map) {
+  uint8_t *ptr = video_mem;
+  int offset = bytesPerPixel * (h_res*y + x);
+  ptr += offset;
+
+  for(int i = 0; i < xpm_image_h; i++){
+    for(int j = 0; j < xpm_image_w; j++){
+      uint32_t color = 0;
+      for (unsigned byte = 0; byte < bytesPerPixel; byte++) {
+        color += *(map + byte) << byte * 8;
       }
-      if ((y+i) >= v_res) break;
+      vg_draw_pixel(&ptr, color);
+      map += bytesPerPixel;
+    }
+    ptr -= bytesPerPixel*(xpm_image_w);
+    ptr += bytesPerPixel*h_res;
   }
+
   return 0;
 }
 
-int (vg_clear_xpm)(uint16_t x, uint16_t y, int width, int height, uint8_t* map) {
-  for(int i = 0; i < height; i++){
-      for(int j = 0; j < width; j++){
-        vg_draw_hline((x+j), (y+i), 1, 0);
-        if ((x+j) >= h_res) break; 
-      }
-      if ((y+i) >= v_res) break;
+int (vg_clear_xpm)(uint16_t x, uint16_t y, int xpm_image_w, int xpm_image_h) {
+  uint8_t *ptr = video_mem;
+  int offset = bytesPerPixel * (h_res*y + x);
+  ptr += offset;
+
+  for(int i = 0; i < xpm_image_h; i++){
+    for(int j = 0; j < xpm_image_w; j++){
+      vg_draw_pixel(&ptr, 0);
+    }
+    ptr -= bytesPerPixel*(xpm_image_w);
+    ptr += bytesPerPixel*h_res;
   }
   return 0;
 }
