@@ -1,5 +1,5 @@
-#ifndef _PROJ_TIMER_MACROS_H_
-#define _PROJ_TIMER_MACROS_H_
+#ifndef PROJ_TIMER_MACROS_H
+#define PROJ_TIMER_MACROS_H
 
 #include <lcom/lcf.h>
 
@@ -34,8 +34,8 @@
 #define TIMER_RATE_GEN   BIT(2)
 
 
-#define TIMER_BCD 0x01
-#define TIMER_BIN 0x00
+#define TIMER_BCD        0x01
+#define TIMER_BIN        0x00
 
 
 #define TIMER_RB_COUNT_  BIT(5)

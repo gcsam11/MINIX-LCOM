@@ -1,5 +1,5 @@
-#ifndef _PROJ_SPRITE_H_
-#define _PROJ_SPRITE_H_
+#ifndef PROJ_SPRITE_H
+#define PROJ_SPRITE_H
 
 #include <lcom/lcf.h>
 

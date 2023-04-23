@@ -1,12 +1,12 @@
 #include "sprite.h"
-/*
+
 Sprite *create_sprite(xpm_map_t xpm, int x, int y, int xspeed, int yspeed) {
     Sprite *sp = (Sprite *) malloc ( sizeof(Sprite));
     xpm_image_t img;
 
     if( sp == NULL ) return NULL;
     
-    sp->map = xpm_load(xpm, XPM_INDEXED, &img);
+    sp->map = xpm_load(xpm, XPM_8_8_8, &img);
 
     if( sp->map == NULL ) {
         free(sp);
@@ -49,4 +49,4 @@ void destroy_sprite(Sprite **sp) {
     if((*sp)->map) free((*sp)->map);
     free(*sp);
     *sp = NULL;
-}*/
+}
