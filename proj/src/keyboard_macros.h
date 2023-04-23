@@ -7,8 +7,17 @@
 
 #define KBC_IRQ              1
 
-#define ESC_BREAK            0x81
 #define KBC_2BYTECODE_FIRST  0xE0
+#define ESC_MAKECODE         0x01
+#define ESC_BREAKCODE        0x81
+#define W_MAKECODE           0x11
+#define W_BREAKCODE          0x91
+#define A_MAKECODE           0x1E
+#define A_BREAKCODE          0x9E
+#define S_MAKECODE           0x1F
+#define S_BREAKCODE          0x9F
+#define D_MAKECODE           0x20
+#define D_BREAKCODE          0xA0
 
 #define KBC_ST_REG           0X64
 #define KBC_IN_BUF_CMDS      0X64

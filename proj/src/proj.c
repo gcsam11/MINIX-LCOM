@@ -35,26 +35,28 @@ int(proj_main_loop)(int argc, char *argv[]) {
   uint8_t bytes[2];
   message msg;
 
+  bool W_ISPRESSED = false, A_ISPRESSED = false, S_ISPRESSED = false, D_ISPRESSED = false;
+
   uint8_t frame_time = sys_hz() / 60;
 
-  if(timer_subscribe_int(&timer_irq_set) != F_OK){
+  if(timer_subscribe_int(&timer_irq_set) != OK){
     printf("FAILED TO SUBSCRIBE KEYBOARD\n");
     return 1;
   }
 
-  if (kbd_subscribe_int(&kbd_irq_set) != F_OK) {
+  if (kbd_subscribe_int(&kbd_irq_set) != OK) {
     printf("FAILED TO SUBSCRIBE KEYBOARD\n");
     return 1;
   }
 
-  vg_init(0x11B);
+  vg_init(0x118);
 
-  Sprite* planthero = create_sprite(planthero_xpm, 0, 350, 1, 0);
+  Sprite* planthero = create_sprite(planthero_xpm, 0, 350, 0, 0);
   
   draw_sprite(planthero);
 
   //bool running = true;
-  while(scancode != ESC_BREAK) {
+  while(scancode != ESC_MAKECODE) {
     /* Get a request message. */
     if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
         printf("driver_receive failed with: %d", r);
@@ -73,6 +75,36 @@ int(proj_main_loop)(int argc, char *argv[]) {
                     }   
                     bytes[k] = scancode;
                     k = 0;
+
+                    switch (scancode) {
+                          case W_MAKECODE:
+                            W_ISPRESSED = true;
+                            break;
+                          case W_BREAKCODE:
+                            W_ISPRESSED = false;
+                            break;
+                          case A_MAKECODE:
+                            A_ISPRESSED = true;
+                            break;
+                          case A_BREAKCODE:
+                            A_ISPRESSED = false;
+                            break;
+                          case S_MAKECODE:
+                            S_ISPRESSED = true;
+                            break;
+                          case S_BREAKCODE:
+                            S_ISPRESSED = false;
+                            break;
+                          case D_MAKECODE:
+                            D_ISPRESSED = true;
+                            break;
+                          case D_BREAKCODE:
+                            D_ISPRESSED = false;
+                            break;
+                          
+                          default:
+                            break;
+                        }
                 }
                 if (msg.m_notify.interrupts &timer_irq_set) { /* subscribed interrupt */
                     timer_int_handler();
@@ -80,19 +112,33 @@ int(proj_main_loop)(int argc, char *argv[]) {
                     if (timer0_interrupt_cnt%frame_time == 0) {
                         clear_sprite(planthero);
 
+
+                        if (W_ISPRESSED && !sprite_touches_top(planthero)) {
+                          set_sprite_yspeed(planthero, -1);
+                        } else if (S_ISPRESSED && !sprite_touches_bottom(planthero)) {
+                            set_sprite_yspeed(planthero, 1);
+                        } else {
+                            set_sprite_yspeed(planthero, 0);
+                        }
+
+                        if (A_ISPRESSED && !sprite_touches_left(planthero)) {
+                          set_sprite_xspeed(planthero, -1);
+                        } else if (D_ISPRESSED && !sprite_touches_right(planthero)) {
+                            set_sprite_xspeed(planthero, 1);
+                        } else {
+                            set_sprite_xspeed(planthero, 0);
+                        }
+
+
                         update_sprite_position(planthero);
 
                         draw_sprite(planthero);
 
                         swap_buffers();
                     }
-
-                    if (planthero->x == (1280-planthero->width)) {
-                        planthero->xspeed = 0;
-                    }
-                
-              }
+                }
                 break;
+
             default:
                 break; /* no other notifications expected: do nothing */	
         }
@@ -101,12 +147,12 @@ int(proj_main_loop)(int argc, char *argv[]) {
     }
   }
 
-  if (kbd_unsubscribe_int() != F_OK) {
+  if (kbd_unsubscribe_int() != OK) {
     printf("FAILED TO UNSUBSCRIBE KEYBOARD\n");
     return 1;
   }
 
-  if(timer_unsubscribe_int() != F_OK){
+  if(timer_unsubscribe_int() != OK){
     printf("FAILED TO UNSUBSCRIBE KEYBOARD\n");
     return 1;
   }

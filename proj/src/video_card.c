@@ -12,6 +12,14 @@ unsigned vram_size;
 static void *video_mem;
 static void *buffer;
 
+uint16_t get_h_res() {
+  return h_res;
+}
+
+uint16_t get_v_res() {
+  return v_res;
+}
+
 int my_vbe_get_mode_info(uint16_t mode, vbe_mode_info_t *vmi_p) {
   reg86_t r86;
   memset(&r86, 0, sizeof(r86));
