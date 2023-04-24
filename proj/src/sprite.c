@@ -39,20 +39,20 @@ int sprite_right_bound(Sprite *sp) {
     return (sp->x + sp->width);
 }
 
-bool sprite_touches_top(Sprite* sp) {
-    return sprite_upper_bound(sp) == 0;
+bool sprite_goes_beyond_top(Sprite* sp) {
+    return (sprite_upper_bound(sp)+sp->yspeed < 0);
 }
 
-bool sprite_touches_bottom(Sprite* sp) {
-    return sprite_lower_bound(sp) == get_v_res();
+bool sprite_goes_beyond_bottom(Sprite* sp) {
+    return (sprite_lower_bound(sp)+sp->yspeed > get_v_res());
 }
 
-bool sprite_touches_left(Sprite* sp) {
-    return sprite_left_bound(sp) == 0;
+bool sprite_goes_beyond_left(Sprite* sp) {
+    return (sprite_left_bound(sp)+sp->xspeed < 0);
 }
 
-bool sprite_touches_right(Sprite* sp) {
-    return sprite_right_bound(sp) == get_h_res();
+bool sprite_goes_beyond_right(Sprite* sp) {
+    return (sprite_right_bound(sp)+sp->xspeed > get_h_res());
 }
 
 void draw_sprite(Sprite *sp) {

@@ -8,6 +8,7 @@
 typedef struct {
     int x, y;
     uint16_t width, height;
+    int upper_bound, lower_bound, left_bound, right_bound;
     int xspeed, yspeed;
     uint8_t *map;
 } Sprite;
@@ -22,13 +23,13 @@ int sprite_left_bound(Sprite *sp);
 
 int sprite_right_bound(Sprite *sp);
 
-bool sprite_touches_top(Sprite* sp);
+bool sprite_goes_beyond_top(Sprite* sp);
 
-bool sprite_touches_bottom(Sprite* sp);
+bool sprite_goes_beyond_bottom(Sprite* sp);
 
-bool sprite_touches_left(Sprite* sp);
+bool sprite_goes_beyond_left(Sprite* sp);
 
-bool sprite_touches_right(Sprite* sp);
+bool sprite_goes_beyond_right(Sprite* sp);
 
 void draw_sprite(Sprite *sp);
 

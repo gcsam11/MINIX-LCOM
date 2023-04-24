@@ -113,18 +113,39 @@ int(proj_main_loop)(int argc, char *argv[]) {
                         clear_sprite(planthero);
 
 
-                        if (W_ISPRESSED && !sprite_touches_top(planthero)) {
+                        if (W_ISPRESSED) {
+
                           set_sprite_yspeed(planthero, -1);
-                        } else if (S_ISPRESSED && !sprite_touches_bottom(planthero)) {
+
+                          if (sprite_goes_beyond_top(planthero))
+                            set_sprite_yspeed(planthero,  0-sprite_upper_bound(planthero));
+
+                        } else if (S_ISPRESSED) {
+
                             set_sprite_yspeed(planthero, 1);
+
+                            if (sprite_goes_beyond_bottom(planthero))
+                              set_sprite_yspeed(planthero,  get_v_res()-sprite_lower_bound(planthero));
+
                         } else {
                             set_sprite_yspeed(planthero, 0);
                         }
 
-                        if (A_ISPRESSED && !sprite_touches_left(planthero)) {
+
+                        if (A_ISPRESSED) {
+
                           set_sprite_xspeed(planthero, -1);
-                        } else if (D_ISPRESSED && !sprite_touches_right(planthero)) {
+
+                          if (sprite_goes_beyond_left(planthero))
+                            set_sprite_xspeed(planthero,  0-sprite_left_bound(planthero));
+
+                        } else if (D_ISPRESSED) {
+
                             set_sprite_xspeed(planthero, 1);
+
+                            if (sprite_goes_beyond_right(planthero))
+                              set_sprite_xspeed(planthero,  get_h_res()-sprite_right_bound(planthero));
+
                         } else {
                             set_sprite_xspeed(planthero, 0);
                         }
