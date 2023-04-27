@@ -37,7 +37,8 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   bool W_ISPRESSED = false, A_ISPRESSED = false, S_ISPRESSED = false, D_ISPRESSED = false;
 
-  uint8_t frame_time = sys_hz() / 60;
+  int frame_rate = 60;
+  uint8_t interrupts_per_frame = sys_hz() / frame_rate;
 
   if(timer_subscribe_int(&timer_irq_set) != OK){
     printf("FAILED TO SUBSCRIBE KEYBOARD\n");
@@ -109,7 +110,7 @@ int(proj_main_loop)(int argc, char *argv[]) {
                 if (msg.m_notify.interrupts &timer_irq_set) { /* subscribed interrupt */
                     timer_int_handler();
 
-                    if (timer0_interrupt_cnt%frame_time == 0) {
+                    if (timer0_interrupt_cnt%interrupts_per_frame == 0) {
                         clear_sprite(planthero);
 
 
