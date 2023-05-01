@@ -34,14 +34,14 @@ void (mouse_parse_packet)(struct packet* pp);
 
 int (mouse_gesture_matching)(struct Gesture *gesture, struct mouse_ev *event, uint8_t x_len, uint8_t tolerance);
 
-int (handle_LB_PRESSED)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
+int (handle_LB_PRESSED)(struct Gesture *gesture, int16_t ev_delta_x, int16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
 
-int (handle_LB_RELEASED)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
+int (handle_LB_RELEASED)(struct Gesture *gesture, int16_t ev_delta_x, int16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
 
-int (handle_RB_PRESSED)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
+int (handle_RB_PRESSED)(struct Gesture *gesture, int16_t ev_delta_x, int16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
 
-int (handle_RB_RELEASED)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
+int (handle_RB_RELEASED)(struct Gesture *gesture, int16_t ev_delta_x, int16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
 
-int (handle_BUTTON_EV)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
+int (handle_BUTTON_EV)(struct Gesture *gesture, int16_t ev_delta_x, int16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
 
-int (handle_MOUSE_MOV)(struct Gesture *gesture, uint16_t ev_delta_x, uint16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
+int (handle_MOUSE_MOV)(struct Gesture *gesture, int16_t ev_delta_x, int16_t ev_delta_y, uint8_t x_len, uint8_t tolerance);
