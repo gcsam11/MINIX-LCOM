@@ -2,15 +2,17 @@
 
 #define BYTES(n) (n+7)/8
 
+static uint8_t *front_buffer;
+static uint8_t *back_buffer1;
+static uint8_t *back_buffer2;
+static const uint8_t *background_buffer;
+
 static uint16_t h_res;
 static uint16_t v_res;
-static uint8_t bitsPerPixel;
+
 static uint8_t bytesPerPixel;
 
-unsigned vram_size;
-
-static void *video_mem;
-static void *buffer;
+static unsigned int vram_size;
 
 uint16_t get_h_res() {
   return h_res;
@@ -66,20 +68,25 @@ void* (vg_init)(uint16_t mode) {
   vbe_mode_info_t vmi_p;
   my_vbe_get_mode_info(mode, &vmi_p);
 
-  unsigned vram_base;
+  unsigned int front_buffer_base;
+  unsigned int back_buffer_base;
+  unsigned int back_buffer2_base;
 
   h_res = vmi_p.XResolution;
   v_res = vmi_p.YResolution;
-  bitsPerPixel = vmi_p.BitsPerPixel;
-  bytesPerPixel = BYTES(bitsPerPixel);
-  vram_base = vmi_p.PhysBasePtr;
+
+  bytesPerPixel = BYTES(vmi_p.BitsPerPixel);
+
+  front_buffer_base = vmi_p.PhysBasePtr;
   vram_size = h_res * v_res * bytesPerPixel;
+  back_buffer_base = front_buffer_base + vram_size;
+  back_buffer2_base = back_buffer_base + vram_size;
 
   /* MAP MEMORY */
   struct minix_mem_range mr;
 
-  mr.mr_base = (phys_bytes) vram_base;
-  mr.mr_limit = mr.mr_base + vram_size;
+  mr.mr_base = (phys_bytes)front_buffer_base;
+  mr.mr_limit = mr.mr_base + (vram_size * 3);
 
   int r;
   if (OK != (r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr))) {
@@ -87,14 +94,18 @@ void* (vg_init)(uint16_t mode) {
     return NULL;
   }
 
-  video_mem = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
+  front_buffer = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
+  back_buffer1 = vm_map_phys(SELF, (void *)((phys_bytes)back_buffer_base), vram_size);
+  back_buffer2 = vm_map_phys(SELF, (void *)((phys_bytes)back_buffer2_base), vram_size);
 
-  if(video_mem == MAP_FAILED) {
+  if(front_buffer == MAP_FAILED || back_buffer1 == MAP_FAILED || back_buffer2 == MAP_FAILED) {
     panic("couldn't map video memory");
     return NULL;
   }
 
-  memset(video_mem, 0, vram_size);
+  memset(front_buffer, 0, vram_size);
+  memset(back_buffer1, 0, vram_size);
+  memset(back_buffer2, 0, vram_size);
 
   /* SET MODE */
   reg86_t r86;
@@ -115,60 +126,110 @@ void* (vg_init)(uint16_t mode) {
     return NULL;
   }
 
-  buffer = (char*) malloc (vram_size);
+  background_buffer = calloc(vram_size, sizeof(uint8_t));
 
-  return video_mem;
+  return front_buffer;
 }
 
-void swap_buffers() {
-  memcpy(video_mem, buffer, vram_size);
+int page_flip() {
+  reg86_t r;
+  memset(&r, 0, sizeof(r));
+
+  r.ax = 0x4F07;  
+  r.bx = 0x01;
+  r.intno = 0x10;
+
+  if(sys_int86(&r) != OK) { 
+    printf("ERROR WITH sys_int86\n");
+    return -1;
+  }
+
+  if(r.dx == 0) {
+    memset(&r, 0, sizeof(r));
+    r.dx = v_res;
+  } else if (r.dx == v_res) {
+      memset(&r, 0, sizeof(r));
+      r.dx = v_res*2;
+  } else {
+      memset(&r, 0, sizeof(r));
+      r.dx = 0;
+  }
+
+  r.ax = 0x4F07;
+  r.bh = 0x00;
+  r.bl = 0x80;
+  r.cx = 0;
+  r.intno = 0x10;
+
+  if(sys_int86(&r) != OK) { 
+    printf("ERROR WITH sys_int86\n");
+    return -1;
+  }
+
+  uint8_t *tmp = front_buffer;
+  front_buffer = back_buffer1;
+  back_buffer1 = back_buffer2;
+  back_buffer2 = tmp;
+
+  return 0;
 }
 
-int (vg_draw_pixel_map)(uint16_t x, uint16_t y, int xpm_image_w, int xpm_image_h, uint8_t* map) {
-  uint8_t *ptr = buffer;
+void (vg_set_background)(xpm_map_t xpm) {
+  xpm_image_t img;
+  background_buffer = xpm_load(xpm, XPM_8_8_8, &img);
+}
+
+void (vg_draw_background)() {
+  memcpy(back_buffer1, background_buffer, vram_size);
+}
+
+void vg_clear_frame() {
+  memset(back_buffer1, 0, vram_size);
+}
+
+int (vg_draw_pixel_map)(uint16_t x, uint16_t y, uint16_t xpm_image_w, uint16_t xpm_image_h, uint8_t* map) {
   int offset = bytesPerPixel * (h_res*y + x);
-  ptr += offset;
+  
+  uint8_t *vmem_ptr = back_buffer1;
+  vmem_ptr += offset;
 
-  for(int i = 0; i < xpm_image_h; i++){
-    for(int j = 0; j < xpm_image_w; j++){
+  for(int i = 0; i < xpm_image_h; i++) {
+    for (int j = 0; j < xpm_image_w; j++) {
       uint32_t color = 0;
 
       memcpy(&color, map, bytesPerPixel);
 
-      vg_draw_pixel(&ptr, color);
+      vg_draw_pixel(&vmem_ptr, &color);
 
+      vmem_ptr += bytesPerPixel;
       map += bytesPerPixel;
     }
-    ptr -= bytesPerPixel*(xpm_image_w);
-    ptr += bytesPerPixel*h_res;
+    vmem_ptr += bytesPerPixel * (h_res - xpm_image_w);
   }
 
   return 0;
 }
 
-int (vg_clear_pixel_map)(uint16_t x, uint16_t y, int xpm_image_w, int xpm_image_h) {
-  uint8_t *ptr = buffer;
+int (vg_clear_pixel_map)(uint16_t x, uint16_t y, uint16_t xpm_image_w, uint16_t xpm_image_h) {
   int offset = bytesPerPixel * (h_res*y + x);
-  ptr += offset;
 
-  for(int i = 0; i < xpm_image_h; i++){
-    for(int j = 0; j < xpm_image_w; j++){
-      vg_draw_pixel(&ptr, 0);
-    }
-    ptr -= bytesPerPixel*(xpm_image_w);
-    ptr += bytesPerPixel*h_res;
+  uint8_t *vmem_ptr = front_buffer;
+  const uint8_t *background_ptr = background_buffer;
+  vmem_ptr += offset;
+  background_ptr += offset;
+
+  for (int i = 0; i < xpm_image_h; i++) {
+    memcpy(vmem_ptr, background_ptr, bytesPerPixel * xpm_image_w );
+
+    vmem_ptr += bytesPerPixel * h_res;
+    background_ptr += bytesPerPixel * h_res;
   }
+
   return 0;
 }
 
-int(vg_draw_pixel)(uint8_t** ptr, uint32_t color) {
-  if (color == CHROMA_KEY_GREEN_888) {
-    color = 0;
-  }
+void (vg_draw_pixel)(uint8_t** vmem_ptr, uint32_t* color_ptr) {
+  if (*color_ptr == CHROMA_KEY_GREEN_888) return;
 
-  memcpy(*ptr, &color, bytesPerPixel);
-
-  *ptr += bytesPerPixel;
-  
-  return 0;
+  memcpy(*vmem_ptr, color_ptr, bytesPerPixel);
 }

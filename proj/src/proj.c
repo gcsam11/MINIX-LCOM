@@ -1,7 +1,12 @@
 #include "proj.h"
 
-extern uint32_t timer0_interrupt_cnt;
+#define FREQUENCY 60.0
+#define FRAME_RATE 60.0
+#define FIXED_TIMESTEP 1/FREQUENCY
+
 extern uint8_t scancode;
+extern uint8_t pckt_bt;
+extern uint32_t timer0_interrupt_cnt;
 
 int main(int argc, char *argv[]) {
   // sets the language of LCF messages (can be either EN-US or PT-PT)
@@ -35,10 +40,11 @@ int(proj_main_loop)(int argc, char *argv[]) {
   uint8_t bytes[2];
   message msg;
 
-  bool W_ISPRESSED = false, A_ISPRESSED = false, S_ISPRESSED = false, D_ISPRESSED = false;
+  bool HERO_MOVED = false, W_ISPRESSED = false, A_ISPRESSED = false, S_ISPRESSED = false, D_ISPRESSED = false;
 
-  int frame_rate = 60;
-  uint8_t interrupts_per_frame = sys_hz() / frame_rate;
+  uint8_t interrupts_per_frame = FREQUENCY / FRAME_RATE;
+
+  printf("%d\n", interrupts_per_frame);
 
   if(timer_subscribe_int(&timer_irq_set) != OK){
     printf("FAILED TO SUBSCRIBE KEYBOARD\n");
@@ -52,131 +58,123 @@ int(proj_main_loop)(int argc, char *argv[]) {
 
   vg_init(0x118);
 
-  Sprite* planthero = create_sprite(planthero_xpm, 0, 350, 0, 0);
-  
-  draw_sprite(planthero);
+  vg_set_background(background_xpm);
 
-  //bool running = true;
+  Sprite* planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
+
+  vg_draw_background();
+  draw_sprite(planthero);
+  page_flip();
+
   while(scancode != ESC_MAKECODE) {
-    /* Get a request message. */
     if ( (r = driver_receive(ANY, &msg, &ipc_status)) != 0 ) { 
-        printf("driver_receive failed with: %d", r);
-        continue;
+      printf("driver_receive failed with: %d", r);
+      continue;
     }
 
-    if (is_ipc_notify(ipc_status)) { /* received notification */
-        switch (_ENDPOINT_P(msg.m_source)) {
-            case HARDWARE: /* hardware interrupt notification */	
-                if (msg.m_notify.interrupts &kbd_irq_set) { /* subscribed interrupt */
-                    kbd_ih();
+    if (is_ipc_notify(ipc_status)) {
+      switch (_ENDPOINT_P(msg.m_source)) {
+      case HARDWARE:
+          if (msg.m_notify.interrupts &kbd_irq_set) {
+              kbd_ih();
 
-                    if (scancode == KBC_2BYTECODE_FIRST) {
-                        bytes[k++] = scancode;
-                        continue;
-                    }   
-                    bytes[k] = scancode;
-                    k = 0;
+              if (scancode == FIRSTBYTE_2BYTECODE) {
+                  bytes[k++] = scancode;
+                  continue;
+              }   
+              bytes[k] = scancode;
+              k = 0;
 
-                    switch (scancode) {
-                          case W_MAKECODE:
-                            W_ISPRESSED = true;
-                            break;
-                          case W_BREAKCODE:
-                            W_ISPRESSED = false;
-                            break;
-                          case A_MAKECODE:
-                            A_ISPRESSED = true;
-                            break;
-                          case A_BREAKCODE:
-                            A_ISPRESSED = false;
-                            break;
-                          case S_MAKECODE:
-                            S_ISPRESSED = true;
-                            break;
-                          case S_BREAKCODE:
-                            S_ISPRESSED = false;
-                            break;
-                          case D_MAKECODE:
-                            D_ISPRESSED = true;
-                            break;
-                          case D_BREAKCODE:
-                            D_ISPRESSED = false;
-                            break;
-                          
-                          default:
-                            break;
-                        }
-                }
-                if (msg.m_notify.interrupts &timer_irq_set) { /* subscribed interrupt */
-                    timer_int_handler();
+              switch (scancode) {
+                    case W_MAKECODE:
+                      W_ISPRESSED = true;
+                      break;
+                    case W_BREAKCODE:
+                      W_ISPRESSED = false;
+                      break;
+                    case A_MAKECODE:
+                      A_ISPRESSED = true;
+                      break;
+                    case A_BREAKCODE:
+                      A_ISPRESSED = false;
+                      break;
+                    case S_MAKECODE:
+                      S_ISPRESSED = true;
+                      break;
+                    case S_BREAKCODE:
+                      S_ISPRESSED = false;
+                      break;
+                    case D_MAKECODE:
+                      D_ISPRESSED = true;
+                      break;
+                    case D_BREAKCODE:
+                      D_ISPRESSED = false;
+                      break;
+                    
+                    default:
+                      break;
+              }
+              
+              HERO_MOVED = W_ISPRESSED || S_ISPRESSED || A_ISPRESSED || D_ISPRESSED;
 
-                    if (timer0_interrupt_cnt%interrupts_per_frame == 0) {
-                        clear_sprite(planthero);
+              if (W_ISPRESSED) {
 
+                set_sprite_vy(planthero, -240);
 
-                        if (W_ISPRESSED) {
+              } else if (S_ISPRESSED) {
 
-                          set_sprite_yspeed(planthero, -1);
+                  set_sprite_vy(planthero, 240);
 
-                          if (sprite_goes_beyond_top(planthero))
-                            set_sprite_yspeed(planthero,  0-sprite_upper_bound(planthero));
+              } else {
+                  set_sprite_vy(planthero, 0);
+              }
 
-                        } else if (S_ISPRESSED) {
+              if (A_ISPRESSED) {
 
-                            set_sprite_yspeed(planthero, 1);
+                set_sprite_vx(planthero, -240);
 
-                            if (sprite_goes_beyond_bottom(planthero))
-                              set_sprite_yspeed(planthero,  get_v_res()-sprite_lower_bound(planthero));
+              } else if (D_ISPRESSED) {
 
-                        } else {
-                            set_sprite_yspeed(planthero, 0);
-                        }
+                  set_sprite_vx(planthero, 240);
 
+              } else {
+                  set_sprite_vx(planthero, 0);
+              }
+          }
+          if (msg.m_notify.interrupts &timer_irq_set) {
+              timer_int_handler();
 
-                        if (A_ISPRESSED) {
+              if (timer0_interrupt_cnt % interrupts_per_frame == 0) {
 
-                          set_sprite_xspeed(planthero, -1);
+                  if (HERO_MOVED) {
+                    update_sprite_position(planthero, FIXED_TIMESTEP);
+                  }
+              }
+              if (HERO_MOVED) {
+                vg_clear_frame();
 
-                          if (sprite_goes_beyond_left(planthero))
-                            set_sprite_xspeed(planthero,  0-sprite_left_bound(planthero));
+                vg_draw_background();
+                draw_sprite(planthero);
 
-                        } else if (D_ISPRESSED) {
+                page_flip();
+              }
+          }
+          break;
 
-                            set_sprite_xspeed(planthero, 1);
-
-                            if (sprite_goes_beyond_right(planthero))
-                              set_sprite_xspeed(planthero,  get_h_res()-sprite_right_bound(planthero));
-
-                        } else {
-                            set_sprite_xspeed(planthero, 0);
-                        }
-
-
-                        update_sprite_position(planthero);
-
-                        draw_sprite(planthero);
-
-                        swap_buffers();
-                    }
-                }
-                break;
-
-            default:
-                break; /* no other notifications expected: do nothing */	
-        }
-    } else { /* received a standard message, not a notification */
-        /* no standard messages expected: do nothing */
+      default:
+          break;
+      }
     }
   }
 
   if (kbd_unsubscribe_int() != OK) {
-    printf("FAILED TO UNSUBSCRIBE KEYBOARD\n");
-    return 1;
+  printf("FAILED TO UNSUBSCRIBE KEYBOARD\n");
+  return 1;
   }
 
   if(timer_unsubscribe_int() != OK){
-    printf("FAILED TO UNSUBSCRIBE KEYBOARD\n");
-    return 1;
+  printf("FAILED TO UNSUBSCRIBE KEYBOARD\n");
+  return 1;
   }
 
   clear_sprite(planthero);

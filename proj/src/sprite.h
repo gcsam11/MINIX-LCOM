@@ -2,44 +2,31 @@
 #define PROJ_SPRITE_H
 
 #include <lcom/lcf.h>
+#include <stdint.h>
+#include <math.h>
 
 #include "video_card.h"
 
 typedef struct {
-    int x, y;
+    double x, y;
+    double prev_x, prev_y;
+    double vx, vy;
     uint16_t width, height;
-    int upper_bound, lower_bound, left_bound, right_bound;
-    int xspeed, yspeed;
+    double min_x, max_x, min_y, max_y;
     uint8_t *map;
 } Sprite;
 
-Sprite *create_sprite(xpm_map_t xpm, int x, int y, int xspeed, int yspeed);
+Sprite *create_sprite(xpm_map_t xpm, double x, double y, double vx, double vy);
 
-int sprite_upper_bound(Sprite *sp);
+void set_sprite_vx(Sprite *sp, double new_vx);
 
-int sprite_lower_bound(Sprite *sp);
+void set_sprite_vy(Sprite *sp, double new_vy);
 
-int sprite_left_bound(Sprite *sp);
-
-int sprite_right_bound(Sprite *sp);
-
-bool sprite_goes_beyond_top(Sprite* sp);
-
-bool sprite_goes_beyond_bottom(Sprite* sp);
-
-bool sprite_goes_beyond_left(Sprite* sp);
-
-bool sprite_goes_beyond_right(Sprite* sp);
+void update_sprite_position(Sprite *sp, double delta_t);
 
 void draw_sprite(Sprite *sp);
 
 void clear_sprite(Sprite *sp);
-
-void update_sprite_position(Sprite *sp);
-
-void set_sprite_xspeed(Sprite *sp, int new_xspeed);
-
-void set_sprite_yspeed(Sprite *sp, int new_yspeed);
 
 void destroy_sprite(Sprite **sp);
 

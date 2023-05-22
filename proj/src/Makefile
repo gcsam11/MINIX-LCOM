@@ -2,7 +2,7 @@
 PROG=proj
 
 # source code files to be compiled
-SRCS = proj.c video_card.c sprite.c keyboard.c timer.c utils.c
+SRCS = proj.c video_card.c sprite.c mouse.c keyboard.c kbc.c timer.c utils.c
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set

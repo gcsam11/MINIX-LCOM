@@ -14,7 +14,7 @@ static uint8_t redFieldPosition;
 static uint8_t greenFieldPosition;
 static uint8_t blueFieldPosition;
 
-static void *video_mem;
+static void *front_buffer;
 struct minix_mem_range mr;
 
 void* (vg_init)(uint16_t mode) {
@@ -44,12 +44,12 @@ void* (vg_init)(uint16_t mode) {
   if (OK != (r = sys_privctl(SELF, SYS_PRIV_ADD_MEM, &mr)))
     panic("sys_privctl (ADD_MEM) failed: %d\n", r);
 
-  video_mem = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
+  front_buffer = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
 
-  if(video_mem == MAP_FAILED)
+  if(front_buffer == MAP_FAILED)
     panic("couldn't map video memory");
 
-  memset(video_mem,0,vram_size);
+  memset(front_buffer,0,vram_size);
 
   reg86_t r86;
   memset(&r86, 0, sizeof(r86));
@@ -69,7 +69,7 @@ void* (vg_init)(uint16_t mode) {
     return NULL;
   }
 
-  return video_mem;
+  return front_buffer;
 }
 
 int(vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
@@ -82,7 +82,7 @@ int(vg_draw_rectangle)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, 
 }
 
 int(vg_draw_hline)(uint16_t x, uint16_t y, uint16_t len, uint32_t color) {
-    uint8_t *ptr = video_mem;
+    uint8_t *ptr = front_buffer;
     int offset = bytesPerPixel * (h_res*y + x);
     ptr += offset;
 
@@ -126,7 +126,7 @@ int (vg_draw_rect_matrix)(uint16_t mode, uint8_t no_rectangles, uint32_t first, 
 }
 
 int (vg_draw_xpm)(uint16_t x, uint16_t y, int xpm_image_w, int xpm_image_h, uint8_t* map) {
-  uint8_t *ptr = video_mem;
+  uint8_t *ptr = front_buffer;
   int offset = bytesPerPixel * (h_res*y + x);
   ptr += offset;
 
@@ -147,7 +147,7 @@ int (vg_draw_xpm)(uint16_t x, uint16_t y, int xpm_image_w, int xpm_image_h, uint
 }
 
 int (vg_clear_xpm)(uint16_t x, uint16_t y, int xpm_image_w, int xpm_image_h) {
-  uint8_t *ptr = video_mem;
+  uint8_t *ptr = front_buffer;
   int offset = bytesPerPixel * (h_res*y + x);
   ptr += offset;
 

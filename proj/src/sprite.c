@@ -1,6 +1,6 @@
 #include "sprite.h"
 
-Sprite *create_sprite(xpm_map_t xpm, int x, int y, int xspeed, int yspeed) {
+Sprite *create_sprite(xpm_map_t xpm, double x, double y, double vx, double vy) {
     Sprite *sp = (Sprite *) malloc ( sizeof(Sprite));
     xpm_image_t img;
 
@@ -17,63 +17,44 @@ Sprite *create_sprite(xpm_map_t xpm, int x, int y, int xspeed, int yspeed) {
     sp->height = img.height;
     sp->x = x;
     sp->y = y;
-    sp->xspeed = xspeed;
-    sp->yspeed = yspeed;
+    sp->prev_x = x;
+    sp->prev_y = y;
+    sp->vx = vx;
+    sp->vy = vy;
+    sp->min_x = 0;
+    sp->max_x = get_h_res() - sp->width;
+    sp->min_y = 0;
+    sp->max_y = get_v_res() - sp->height;
 
     return sp;
 }
 
-int sprite_upper_bound(Sprite *sp) {
-    return sp->y;
+void set_sprite_vx(Sprite *sp, double new_vx) {
+    sp->vx = new_vx;
 }
 
-int sprite_lower_bound(Sprite *sp) {
-    return (sp->y + sp->height);
+void set_sprite_vy(Sprite *sp, double new_vy) {
+    sp->vy = new_vy;
 }
 
-int sprite_left_bound(Sprite *sp) {
-    return sp->x;
-}
+void update_sprite_position(Sprite *sp, double delta_t) {
+    sp->prev_x += sp->x;
+    sp->prev_y += sp->y;
+    sp->x += sp->vx * delta_t;
+    sp->y += sp->vy * delta_t;
 
-int sprite_right_bound(Sprite *sp) {
-    return (sp->x + sp->width);
-}
-
-bool sprite_goes_beyond_top(Sprite* sp) {
-    return (sprite_upper_bound(sp)+sp->yspeed < 0);
-}
-
-bool sprite_goes_beyond_bottom(Sprite* sp) {
-    return (sprite_lower_bound(sp)+sp->yspeed > get_v_res());
-}
-
-bool sprite_goes_beyond_left(Sprite* sp) {
-    return (sprite_left_bound(sp)+sp->xspeed < 0);
-}
-
-bool sprite_goes_beyond_right(Sprite* sp) {
-    return (sprite_right_bound(sp)+sp->xspeed > get_h_res());
+    if (sp->x > sp->max_x) sp->x = sp->max_x;
+    if (sp->x < sp->min_x) sp->x = sp->min_x;
+    if (sp->y > sp->max_y) sp->y = sp->max_y;
+    if (sp->y < sp->min_y) sp->y = sp->min_y;
 }
 
 void draw_sprite(Sprite *sp) {
-    vg_draw_pixel_map(sp->x, sp->y, sp->width, sp->height, sp->map);
+    vg_draw_pixel_map(round(sp->x), round(sp->y), sp->width, sp->height, sp->map);
 }
 
 void clear_sprite(Sprite *sp) {
-    vg_clear_pixel_map(sp->x, sp->y, sp->width, sp->height);
-}
-
-void update_sprite_position(Sprite *sp) {
-    sp->x += sp->xspeed;
-    sp->y += sp->yspeed;
-}
-
-void set_sprite_xspeed(Sprite *sp, int new_xspeed) {
-    sp->xspeed = new_xspeed;
-}
-
-void set_sprite_yspeed(Sprite *sp, int new_yspeed) {
-    sp->yspeed = new_yspeed;
+    vg_clear_pixel_map(round(sp->y), round(sp->y), sp->width, sp->height);
 }
 
 void destroy_sprite(Sprite **sp) {

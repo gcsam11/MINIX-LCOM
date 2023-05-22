@@ -4,5 +4,7 @@
 #include <lcom/lcf.h>
 
 #include "xpms/planthero.xpm"
+#include "xpms/mouse.xpm"
+#include "xpms/background.xpm"
 
 #endif

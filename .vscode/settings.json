@@ -1,5 +1,16 @@
 {
     "files.associations": {
-        "lcf.h": "c"
+        "lcf.h": "c",
+        "__bit_reference": "c",
+        "algorithm": "c",
+        "bitset": "c",
+        "chrono": "c",
+        "map": "c",
+        "unordered_map": "c",
+        "*.xpm": "c",
+        "__tree": "c",
+        "deque": "c",
+        "streambuf": "c",
+        "cstdint": "c"
     }
 }

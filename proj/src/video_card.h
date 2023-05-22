@@ -2,6 +2,7 @@
 #define PROJ_VIDEO_CARD_H
 
 #include <lcom/lcf.h>
+#include <stdint.h>
 
 uint16_t get_h_res();
 
@@ -11,12 +12,18 @@ int my_vbe_get_mode_info(uint16_t mode, vbe_mode_info_t *vmi_p);
 
 void* (vg_init)(uint16_t mode);
 
-void swap_buffers();
+int page_flip();
 
-int (vg_draw_pixel_map)(uint16_t x, uint16_t y, int xpm_image_w, int xpm_image_h, uint8_t* map);
+void (vg_set_background)(xpm_map_t xpm);
 
-int (vg_clear_pixel_map)(uint16_t x, uint16_t y, int xpm_image_w, int xpm_image_h);
+void (vg_draw_background)(); 
 
-int(vg_draw_pixel)(uint8_t** ptr, uint32_t color);
+void vg_clear_frame();
+
+int (vg_draw_pixel_map)(uint16_t x, uint16_t y, uint16_t xpm_image_w, uint16_t xpm_image_h, uint8_t* map);
+
+int (vg_clear_pixel_map)(uint16_t x, uint16_t y, uint16_t xpm_image_w, uint16_t xpm_image_h);
+
+void (vg_draw_pixel)(uint8_t** ptr, uint32_t* color_ptr);
 
 #endif
