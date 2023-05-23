@@ -3,14 +3,8 @@
 
 #include <lcom/lcf.h>
 #include <stdint.h>
-#include <time.h>
 
-#include "timer.h"
-#include "keyboard.h"
-#include "mouse.h"
-#include "video_card.h"
-#include "sprite.h"
-#include "pixelmaps.h"
+#include "game.h"
 
 int main(int argc, char *argv[]);
 

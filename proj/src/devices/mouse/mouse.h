@@ -4,9 +4,8 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
-#include "mouse_macros.h"
-#include "kbc.h"
-#include "kbc_macros.h"
+#include "../keyboard/keyboard.h"
+#include "../keyboard/kbc_macros.h"
 
 int (mouse_subscribe_int)(uint8_t *bit_no);
 

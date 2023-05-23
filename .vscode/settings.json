@@ -11,6 +11,14 @@
         "__tree": "c",
         "deque": "c",
         "streambuf": "c",
-        "cstdint": "c"
+        "cstdint": "c",
+        "timer.h": "c",
+        "keyboard.h": "c",
+        "mouse.h": "c",
+        "video_card.h": "c",
+        "sprite.h": "c",
+        "pixelmaps.h": "c",
+        "kbc_macros.h": "c",
+        "random": "c"
     }
 }

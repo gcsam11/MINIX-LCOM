@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <math.h>
 
-#include "video_card.h"
+#include "./devices/video_card/video_card.h"
 
 typedef struct {
     double x, y;
