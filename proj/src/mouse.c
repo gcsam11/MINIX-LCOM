@@ -24,7 +24,7 @@ int (mouse_unsubscribe_int)() {
   return 0;
 }
 
-int my_mouse_enable_data_reporting() {
+int (my_mouse_enable_data_reporting)() {
     if (mouse_send_cmd(MOUSE_ENBL_DT_RPORT) != OK) {
       printf("ERROR WHILE SENDING MOUSE COMMAND\n");
       return 1;
@@ -33,7 +33,7 @@ int my_mouse_enable_data_reporting() {
     return 0;
 }
 
-int my_mouse_disable_data_reporting() {
+int (my_mouse_disable_data_reporting)() {
     if (mouse_send_cmd(MOUSE_DISBL_DT_RPORT) != OK) {
       printf("ERROR WHILE SENDING MOUSE COMMAND\n");
       return 1;
