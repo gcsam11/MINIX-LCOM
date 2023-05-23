@@ -22,7 +22,7 @@ uint16_t get_v_res() {
   return v_res;
 }
 
-int my_vbe_get_mode_info(uint16_t mode, vbe_mode_info_t *vmi_p) {
+int (my_vbe_get_mode_info)(uint16_t mode, vbe_mode_info_t *vmi_p) {
   reg86_t r86;
   memset(&r86, 0, sizeof(r86));
 
@@ -131,7 +131,7 @@ void* (vg_init)(uint16_t mode) {
   return front_buffer;
 }
 
-int page_flip() {
+int (page_flip)() {
   reg86_t r;
   memset(&r, 0, sizeof(r));
 
@@ -157,7 +157,7 @@ int page_flip() {
 
   r.ax = 0x4F07;
   r.bh = 0x00;
-  r.bl = 0x80;
+  r.bl = 0x00;
   r.cx = 0;
   r.intno = 0x10;
 
@@ -183,7 +183,7 @@ void (vg_draw_background)() {
   memcpy(back_buffer1, background_buffer, vram_size);
 }
 
-void vg_clear_frame() {
+void (vg_clear_frame)() {
   memset(back_buffer1, 0, vram_size);
 }
 
