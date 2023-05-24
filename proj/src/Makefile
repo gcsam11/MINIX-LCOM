@@ -1,8 +1,10 @@
 # name of the program (Minix service)
 PROG=proj
 
+.PATH: devices devices/keyboard devices/mouse devices/rtc devices/timer devices/video_card sprites sprites/pixelmaps
+
 # source code files to be compiled
-SRCS = proj.c video_card.c sprite.c mouse.c keyboard.c kbc.c rtc.c timer.c utils.c
+SRCS = proj.c video_card.c mouse.c keyboard.c rtc.c timer.c utils.c sprite.c interrupts.c game.c
 
 # additional compilation flags
 # "-Wall -Wextra -Werror -I . -std=c11 -Wno-unused-parameter" are already set
