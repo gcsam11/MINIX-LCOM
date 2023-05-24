@@ -15,36 +15,14 @@ bool HERO_MOVING = false, MOUSE_MOVED = false, W_ISPRESSED, A_ISPRESSED, S_ISPRE
 Sprite* planthero;
 Sprite* mouse;
 
-void (set_sprites)() {
-    vg_set_background(background_xpm); //function to set what background the video card will draw (directly an xpm, because it doesn´t need position or speed, so it doesn´t need to be a sprite), to actually draw use (vg_draw_background)
-    mouse = create_sprite(mouse_xpm, 200, 200, 0, 0);
-    planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
-}
-
-void (render)(Sprite** sprites) {
-    vg_clear_frame();
-
-    vg_draw_background();
-
-    int sprites_len = sizeof(sprites)/sizeof(sprites[0]);
-
-    for (int i = 0; i < sprites_len; i++) {
-        draw_sprite(sprites[i]);
-    }
-
-    page_flip();
-}
-
 void (game_init)() {
     subscribe_interrupts();
 
     vg_init(0x118);
-    set_sprites();
+    mouse = create_sprite(mouse_xpm, 200, 200, 0, 0);
+    planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
 
-    Sprite* sprites[] = {mouse};
-    render(sprites);
-
-    game_state = MENU;
+    set_game_state(MENU);
 }
 
 void (game_run)() {
@@ -91,6 +69,45 @@ void (game_exit)() {
     destroy_sprite(&planthero);
 
     vg_exit();
+}
+
+void (render)(Sprite** sprites) {
+    vg_clear_frame();
+
+    vg_draw_background();
+
+    int sprites_len = sizeof(sprites)/sizeof(sprites[0]);
+
+    for (int i = 0; i < sprites_len; i++) {
+        draw_sprite(sprites[i]);
+    }
+
+    page_flip();
+}
+
+void (set_game_state)(enum game_state_t state) {
+    switch (state) {
+        case MENU: {
+            //vg_set_background(menu_bckground);
+
+            Sprite* sprites[] = {mouse};
+            render(sprites);
+            
+            break;
+        }
+        case GAMEPLAY: {
+            vg_set_background(background_xpm);
+
+            Sprite* sprites[] = {planthero};
+            render(sprites);
+
+            break;
+        }
+        
+        default:
+            break;
+    }
+    game_state = state;
 }
 
 void (keyboard_event_handler)() {
@@ -186,9 +203,7 @@ void (mouse_event_handler)() {
             MOUSE_MOVED = true;
         }
         if (event->type == LB_PRESSED) {
-            Sprite* sprites[] = {planthero};
-            render(sprites);
-            game_state = GAMEPLAY;
+            set_game_state(GAMEPLAY);
         }
     }
 

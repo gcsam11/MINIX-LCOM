@@ -5,7 +5,7 @@
 static uint8_t *front_buffer;
 static uint8_t *back_buffer1;
 static uint8_t *back_buffer2;
-static const uint8_t *background_buffer;
+static uint8_t *background_buffer;
 
 static uint16_t h_res;
 static uint16_t v_res;

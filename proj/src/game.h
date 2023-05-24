@@ -21,9 +21,9 @@ enum game_state_t {
     GAMEPLAY,
 };
 
-void (set_sprites)();
+void (set_game_state)(enum game_state_t state);
 
-void (render)();
+void (render)(Sprite** sprites);
 
 void (game_init)();
 
