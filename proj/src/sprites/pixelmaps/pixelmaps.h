@@ -6,5 +6,7 @@
 #include "xpm_files/planthero.xpm"
 #include "xpm_files/mouse.xpm"
 #include "xpm_files/background_gameplay.xpm"
+#include "xpm_files/backgroundMainMenu.xpm"
+#include "xpm_files/backgroundLeaderboard.xpm"
 
 #endif

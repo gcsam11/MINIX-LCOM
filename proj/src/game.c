@@ -90,7 +90,7 @@ void (render_frame)(Sprite** sprites) {
 void (set_game_state)(enum game_state_t state) {
     switch (state) {
         case MENU: {
-            //vg_set_background(menu_bckground);
+            vg_set_background(backgroundMainMenu_xpm);
 
             Sprite* sprites[] = {mouse};
             render_frame(sprites);
@@ -187,6 +187,24 @@ void kbd_event_handler() {
                 } else {
                     set_sprite_vx(planthero, 0);
                 }
+            }
+            break;
+        
+        case ESC_MAKECODE:
+            if (game_state == MENU) {
+                game_exit();
+            }
+            break;
+
+        case ONE_MAKECODE:
+            if (game_state == MENU) {
+                set_game_state(GAMEPLAY);
+            }
+            break;
+        
+        case TWO_MAKECODE:
+            if (game_state == MENU) {
+                set_game_state(DATE);
             }
             break;
 
