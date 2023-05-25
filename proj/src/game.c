@@ -94,6 +94,13 @@ void (game_init)() {
 
     vg_init(0x118);
 
+    planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
+    zombie = create_sprite(zombie_xpm, 400, 350, 0, 0);
+    mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
+    play_button = create_sprite(play_white_xpm, 400, 100, 0, 0);
+    date_button = create_sprite(date_white_xpm, 385, 200, 0, 0);
+    quit_button = create_sprite(quit_white_xpm, 350, 300, 0, 0);
+
     set_game_state(MENU);
 }
 
@@ -268,7 +275,18 @@ void mouse_event_handler() {
 
     if (event->type == LB_PRESSED) {
         if (game_state == MENU) {
-            set_game_state(GAMEPLAY);
+            bool collided_one = check_sprite_collision(mouse, play_button);
+            if (collided_one) {
+                set_game_state(GAMEPLAY);
+            }
+            bool collided_two = check_sprite_collision(mouse, date_button);
+            if (collided_two) {
+                set_game_state(DATE);
+            }
+            bool collided_esc = check_sprite_collision(mouse, quit_button);
+            if (collided_esc) {
+                running = false;
+            } 
         }
         else if (game_state == GAMEPLAY) {
             
@@ -283,9 +301,28 @@ void timer_event_handler() {
             if (MOUSE_MOVED) {
                 update_sprite_position(mouse);
 
-                render_frame();
-
                 MOUSE_MOVED = false;
+
+                bool collided_one = check_sprite_collision(mouse, play_button);
+                if (collided_one) {
+                    set_sprite_pixelmap(play_button, play_yellow_xpm);
+                } else {
+                    set_sprite_pixelmap(play_button, play_white_xpm);
+                }
+                bool collided_two = check_sprite_collision(mouse, date_button);
+                if (collided_two) {
+                    set_sprite_pixelmap(date_button, date_yellow_xpm);
+                } else {
+                    set_sprite_pixelmap(date_button, date_white_xpm);
+                }
+                bool collided_esc = check_sprite_collision(mouse, quit_button);
+                if (collided_esc) {
+                    set_sprite_pixelmap(quit_button, quit_yellow_xpm);
+                } else {
+                    set_sprite_pixelmap(quit_button, quit_white_xpm);
+                }
+
+                render_frame();
             }
         }
 
