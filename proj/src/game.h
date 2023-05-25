@@ -18,6 +18,7 @@
 enum game_state_t {
     MENU,
     GAMEPLAY,
+    DATE,
 };
 
 void (game_init)();
