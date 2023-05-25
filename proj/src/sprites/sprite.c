@@ -2,10 +2,10 @@
 
 Sprite* (create_sprite)(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t vy) {
     Sprite* sp = (Sprite*) malloc (sizeof(Sprite));
-    xpm_image_t img;
 
     if( sp == NULL ) return NULL;
     
+    xpm_image_t img;
     sp->map = xpm_load(xpm, XPM_8_8_8, &img);
 
     if( sp->map == NULL ) {
@@ -25,6 +25,13 @@ Sprite* (create_sprite)(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t
     sp->max_y = get_v_res() - sp->height;
 
     return sp;
+}
+
+void (set_sprite_pixelmap)(Sprite* sp, xpm_map_t new_xpm) {
+    xpm_image_t img;
+    sp->map = xpm_load(new_xpm, XPM_8_8_8, &img);
+    sp->width = img.width;
+    sp->height = img.height;
 }
 
 void (set_sprite_x)(Sprite* sp, int16_t new_x) {
