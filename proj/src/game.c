@@ -19,8 +19,8 @@ Sprite* planthero;
 Sprite* mouse;
 Sprite* zombie;
 Sprite* play_button;
-//Sprite* date_button;
-//Sprite* quit_button;
+Sprite* date_button;
+Sprite* quit_button;
 
 void (render_frame)() {
     vg_clear_frame();
@@ -46,10 +46,14 @@ void (set_game_state)(enum game_state_t state) {
             
             mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
             play_button = create_sprite(play_white_xpm, 350, 350, 0, 0);
+            date_button = create_sprite(date_white_xpm, 300, 200, 0, 0);
+            quit_button = create_sprite(quit_white_xpm, 300, 300, 0, 0);
 
             memset(render_sprites, 0, sizeof(render_sprites));
             render_sprites[0] = play_button;
-            render_sprites[1] = mouse;
+            render_sprites[1] = date_button;
+            render_sprites[2] = quit_button;
+            render_sprites[3] = mouse;
 
             render_frame();
             
@@ -89,9 +93,6 @@ void (game_init)() {
     subscribe_interrupts();
 
     vg_init(0x118);
-
-    //date_button = create_sprite(date_white_xpm, 450, 250, 0, 0);
-    //quit_button = create_sprite(quit_white_xpm, 450, 350, 0, 0);
 
     set_game_state(MENU);
 }
@@ -142,8 +143,8 @@ void (game_exit)() {
     destroy_sprite(&zombie);
     destroy_sprite(&mouse);
     destroy_sprite(&play_button);
-    //destroy_sprite(&date_button);
-    //destroy_sprite(&quit_button);
+    destroy_sprite(&date_button);
+    destroy_sprite(&quit_button);
 
     vg_exit();
 }
