@@ -3,8 +3,9 @@
 
 #include <lcom/lcf.h>
 
-#include "xpm_files/background_gameplay.xpm"
+#include "xpm_files/backgroundGameplay.xpm"
 #include "xpm_files/planthero.xpm"
+#include "xpm_files/energy_ball.xpm"
 #include "xpm_files/zombie.xpm"
 #include "xpm_files/mouse.xpm"
 #include "xpm_files/backgroundMainMenu.xpm"
