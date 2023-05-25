@@ -12,7 +12,7 @@ bool running;
 
 uint8_t update_rate = FREQUENCY / FRAME_RATE;
 
-bool HERO_MOVED = false, MOUSE_MOVED = false, W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
+bool HERO_MOVED, MOUSE_MOVED, W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 Sprite* render_sprites[20];
 Sprite* planthero;
@@ -43,6 +43,11 @@ void (set_game_state)(enum game_state_t state) {
     switch (state) {
         case MENU: {
             vg_set_background(backgroundMainMenu_xpm);
+            
+            mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
+            play_button = create_sprite(play_white_xpm, 350, 350, 0, 0);
+            date_button = create_sprite(date_white_xpm, 300, 200, 0, 0);
+            quit_button = create_sprite(quit_white_xpm, 300, 300, 0, 0);
 
             memset(render_sprites, 0, sizeof(render_sprites));
             render_sprites[0] = play_button;
@@ -55,11 +60,15 @@ void (set_game_state)(enum game_state_t state) {
             break;
         }
         case GAMEPLAY: {
+            W_ISPRESSED = false;
+            A_ISPRESSED = false;
+            S_ISPRESSED = false;
+            D_ISPRESSED = false;
+
             vg_set_background(backgroundGameplay_xpm);
-            set_sprite_x(planthero, 0);
-            set_sprite_y(planthero, 0);
-            set_sprite_vx(planthero, 0);
-            set_sprite_vy(planthero, 0);
+
+            planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
+            zombie = create_sprite(zombie_xpm, 500, 325, 0, 0);
 
             memset(render_sprites, 0, sizeof(render_sprites));
             render_sprites[0] = planthero;
@@ -84,13 +93,6 @@ void (game_init)() {
     subscribe_interrupts();
 
     vg_init(0x118);
-
-    planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
-    zombie = create_sprite(zombie_xpm, 400, 350, 0, 0);
-    mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
-    play_button = create_sprite(play_white_xpm, 300, 100, 0, 0);
-    date_button = create_sprite(date_white_xpm, 300, 200, 0, 0);
-    quit_button = create_sprite(quit_white_xpm, 300, 300, 0, 0);
 
     set_game_state(MENU);
 }
@@ -281,9 +283,9 @@ void timer_event_handler() {
             if (MOUSE_MOVED) {
                 update_sprite_position(mouse);
 
-                MOUSE_MOVED = false;
-
                 render_frame();
+
+                MOUSE_MOVED = false;
             }
         }
 
