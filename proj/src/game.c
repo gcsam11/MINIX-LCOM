@@ -109,13 +109,6 @@ void (set_game_state)(enum game_state_t state) {
             set_sprite_x(mouse, 518);
             set_sprite_y(mouse, 384);
 
-            //set_sprite_x(play_button, 450);
-            //set_sprite_y(play_button, 150);
-            //set_sprite_x(date_button, 450);
-            //set_sprite_y(date_button, 250);
-            //set_sprite_x(quit_button, 450);
-            //set_sprite_y(quit_button, 350);
-
             Sprite* sprites[] = {mouse};
             //Sprite* sprites[] = {mouse, play_button, date_button, quit_button};
             render_frame(sprites);
