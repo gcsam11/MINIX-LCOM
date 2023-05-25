@@ -17,6 +17,9 @@ bool HERO_MOVED = false, MOUSE_MOVED = false, W_ISPRESSED, A_ISPRESSED, S_ISPRES
 Sprite* planthero;
 Sprite* zombie;
 Sprite* mouse;
+//Sprite* play_button;
+//Sprite* date_button;
+//Sprite* quit_button;
 
 void (game_init)() {
     subscribe_interrupts();
@@ -26,6 +29,9 @@ void (game_init)() {
     planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
     zombie = create_sprite(zombie_xpm, 400, 350, 0, 0);
     mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
+    //play_button = create_sprite(play_white_xpm, 450, 150, 0, 0);
+    //date_button = create_sprite(date_white_xpm, 450, 250, 0, 0);
+    //quit_button = create_sprite(quit_white_xpm, 450, 350, 0, 0);
 
     set_game_state(MENU);
 }
@@ -75,6 +81,9 @@ void (game_exit)() {
     destroy_sprite(&planthero);
     destroy_sprite(&zombie);
     destroy_sprite(&mouse);
+    //destroy_sprite(&play_button);
+    //destroy_sprite(&date_button);
+    //destroy_sprite(&quit_button);
 
     vg_exit();
 }
@@ -100,7 +109,15 @@ void (set_game_state)(enum game_state_t state) {
             set_sprite_x(mouse, 518);
             set_sprite_y(mouse, 384);
 
+            //set_sprite_x(play_button, 450);
+            //set_sprite_y(play_button, 150);
+            //set_sprite_x(date_button, 450);
+            //set_sprite_y(date_button, 250);
+            //set_sprite_x(quit_button, 450);
+            //set_sprite_y(quit_button, 350);
+
             Sprite* sprites[] = {mouse};
+            //Sprite* sprites[] = {mouse, play_button, date_button, quit_button};
             render_frame(sprites);
             
             break;
@@ -118,6 +135,9 @@ void (set_game_state)(enum game_state_t state) {
             Sprite* sprites[] = {planthero, zombie};
             render_frame(sprites);
 
+            break;
+        }
+        case DATE: {
             break;
         }
         
@@ -210,12 +230,6 @@ void kbd_event_handler() {
                 } else {
                     set_sprite_vx(planthero, 0);
                 }
-            }
-            break;
-        
-        case ESC_MAKECODE:
-            if (game_state == MENU) {
-                game_exit();
             }
             break;
 
