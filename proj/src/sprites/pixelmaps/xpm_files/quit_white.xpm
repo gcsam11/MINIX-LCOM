@@ -1,5 +1,5 @@
 /* XPM */
-static char * quit_white_xpm[] = {
+static xpm_row_t quit_white_xpm[] = {
 "412 74 35 1",
 " 	c None",
 ".	c #303030",
