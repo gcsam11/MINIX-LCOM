@@ -14,9 +14,10 @@ uint8_t update_rate = FREQUENCY / FRAME_RATE;
 
 bool HERO_MOVED = false, MOUSE_MOVED = false, W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
+Sprite* render_sprites[];
 Sprite* planthero;
-Sprite* zombie;
 Sprite* mouse;
+Sprite* zombie;
 
 void (game_init)() {
     subscribe_interrupts();
@@ -227,6 +228,7 @@ void mouse_event_handler() {
         if (game_state == MENU) {
             set_sprite_vx(mouse, event->delta_x);
             set_sprite_vy(mouse, -event->delta_y);
+
             MOUSE_MOVED = true;
         }
     }
@@ -234,6 +236,9 @@ void mouse_event_handler() {
     if (event->type == LB_PRESSED) {
         if (game_state == MENU) {
             set_game_state(GAMEPLAY);
+        }
+        else if (game_state == GAMEPLAY) {
+            
         }
     }
 }
@@ -245,14 +250,13 @@ void timer_event_handler() {
             if (MOUSE_MOVED) {
                 update_sprite_position(mouse);
 
-                Sprite* sprites[] = {mouse};
-                render_frame(sprites);
+                render_frame();
 
                 MOUSE_MOVED = false;
             }
         }
 
-        if (game_state == GAMEPLAY) {
+        else if (game_state == GAMEPLAY) {
             if (HERO_MOVED) {
                 update_sprite_position(planthero);
 
@@ -261,8 +265,7 @@ void timer_event_handler() {
                     set_game_state(MENU);
                 }
 
-                Sprite* sprites[] = {planthero, zombie};
-                render_frame(sprites);
+                render_frame();
             }
         }
     }
