@@ -43,8 +43,8 @@ void (set_game_state)(enum game_state_t state) {
     switch (state) {
         case MENU: {
             vg_set_background(backgroundMainMenu_xpm);
-
-            mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
+            set_sprite_x(mouse, 512);
+            set_sprite_y(mouse, 384);
 
             memset(render_sprites, 0, sizeof(render_sprites));
             render_sprites[0] = mouse;
@@ -56,8 +56,10 @@ void (set_game_state)(enum game_state_t state) {
         }
         case GAMEPLAY: {
             vg_set_background(backgroundGameplay_xpm);
-
-            planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
+            set_sprite_x(planthero, 0);
+            set_sprite_y(planthero, 0);
+            set_sprite_vx(planthero, 0);
+            set_sprite_vy(planthero, 0);
 
             memset(render_sprites, 0, sizeof(render_sprites));
             render_sprites[0] = planthero;
@@ -83,8 +85,10 @@ void (game_init)() {
 
     vg_init(0x118);
 
+    planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
     zombie = create_sprite(zombie_xpm, 400, 350, 0, 0);
-    play_button = create_sprite(play_yellow_xpm, 450, 150, 0, 0);
+    mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
+    play_button = create_sprite(play_white_xpm, 450, 150, 0, 0);
     //date_button = create_sprite(date_white_xpm, 450, 250, 0, 0);
     //quit_button = create_sprite(quit_white_xpm, 450, 350, 0, 0);
 
