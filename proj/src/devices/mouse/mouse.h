@@ -15,12 +15,12 @@ int (my_mouse_enable_data_reporting)();
 
 int (my_mouse_disable_data_reporting)();
 
-void (mouse_ih)();
+void (mouse_int_handler)();
 
 int(mouse_read_data)(uint8_t *data);
 
 int(mouse_send_cmd)(uint8_t cmd);
 
-void (mouse_parse_packet)(struct packet* pp);
+void (mouse_parse_packet)(struct packet* mouse_pp);
 
 #endif

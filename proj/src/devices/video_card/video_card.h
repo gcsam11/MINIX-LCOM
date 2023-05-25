@@ -4,9 +4,9 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
-uint16_t get_h_res();
+uint16_t (get_h_res)();
 
-uint16_t get_v_res();
+uint16_t (get_v_res)();
 
 int (my_vbe_get_mode_info)(uint16_t mode, vbe_mode_info_t *vmi_p);
 

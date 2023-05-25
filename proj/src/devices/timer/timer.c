@@ -1,6 +1,6 @@
 #include "timer.h"
 
-uint32_t timer0_interrupt_cnt = 0;
+uint32_t timer0_cnt = 0;
 int timer0_hook_id = 0;
 
 int (timer_set_frequency)(uint8_t timer, uint32_t freq) {
@@ -81,5 +81,5 @@ int (timer_unsubscribe_int)() {
 }
 
 void (timer_int_handler)() {
-  timer0_interrupt_cnt++;
+  timer0_cnt++;
 }

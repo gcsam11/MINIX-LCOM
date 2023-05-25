@@ -2,15 +2,15 @@
 
 extern uint8_t kbd_irq_set, timer_irq_set, mouse_irq_set;
 
-extern uint32_t timer0_interrupt_cnt;
 extern uint8_t scancode;
-extern struct packet pp;
+extern struct packet mouse_pp;
+extern uint32_t timer0_cnt;
 
 enum game_state_t game_state;
 
 uint8_t update_rate = FREQUENCY / FRAME_RATE;
 
-bool HERO_MOVING = false, MOUSE_MOVED = false, W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
+bool HERO_MOVED = false, MOUSE_MOVED = false, W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 Sprite* planthero;
 Sprite* mouse;
@@ -19,7 +19,8 @@ void (game_init)() {
     subscribe_interrupts();
 
     vg_init(0x118);
-    mouse = create_sprite(mouse_xpm, 200, 200, 0, 0);
+
+    mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
     planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
 
     set_game_state(MENU);
@@ -39,12 +40,12 @@ void (game_run)() {
             switch (_ENDPOINT_P(msg.m_source)) {
                 case HARDWARE:
                     if (msg.m_notify.interrupts &kbd_irq_set) {
-                        kbd_ih();
-                        keyboard_event_handler();
+                        kbd_int_handler();
+                        kbd_event_handler();
                     }
 
                     if (msg.m_notify.interrupts & mouse_irq_set) { /* subscribed interrupt */
-                        mouse_ih();
+                        mouse_int_handler();
                         mouse_event_handler();
                     }
 
@@ -67,18 +68,19 @@ void (game_exit)() {
     unsubscribe_interrupts();
 
     destroy_sprite(&planthero);
+    destroy_sprite(&mouse);
 
     vg_exit();
 }
 
-void (render)(Sprite** sprites) {
+void (render_frame)(Sprite** sprites) {
     vg_clear_frame();
 
     vg_draw_background();
 
-    int sprites_len = sizeof(sprites)/sizeof(sprites[0]);
+    size_t num_sprites = sizeof(sprites)/sizeof(Sprite*);
 
-    for (int i = 0; i < sprites_len; i++) {
+    for (size_t i = 0; i < num_sprites; i++) {
         draw_sprite(sprites[i]);
     }
 
@@ -91,7 +93,7 @@ void (set_game_state)(enum game_state_t state) {
             //vg_set_background(menu_bckground);
 
             Sprite* sprites[] = {mouse};
-            render(sprites);
+            render_frame(sprites);
             
             break;
         }
@@ -99,7 +101,7 @@ void (set_game_state)(enum game_state_t state) {
             vg_set_background(background_xpm);
 
             Sprite* sprites[] = {planthero};
-            render(sprites);
+            render_frame(sprites);
 
             break;
         }
@@ -110,129 +112,129 @@ void (set_game_state)(enum game_state_t state) {
     game_state = state;
 }
 
-void (keyboard_event_handler)() {
-    if (game_state == MENU) {
-        
-    }
-
-    if (game_state == GAMEPLAY) {
-        switch (scancode) {
-            case W_MAKECODE:
+void kbd_event_handler() {
+    switch (scancode) {
+        case W_MAKECODE:
+            if (game_state == GAMEPLAY) {
                 W_ISPRESSED = true;
-                set_sprite_vy(planthero, -240);
+                set_sprite_vy(planthero, -5);
+            }
+            break;
 
-                break;
-
-            case A_MAKECODE:
+        case A_MAKECODE:
+            if (game_state == GAMEPLAY) {
                 A_ISPRESSED = true;
-                set_sprite_vx(planthero, -240);
+                set_sprite_vx(planthero, -5);
+            }
+            break;
 
-                break;
-
-            case S_MAKECODE:
+        case S_MAKECODE:
+            if (game_state == GAMEPLAY) {
                 S_ISPRESSED = true;
-                set_sprite_vy(planthero, 240);
+                set_sprite_vy(planthero, 5);
+            }
+            break;
 
-                break;
-
-            case D_MAKECODE:
+        case D_MAKECODE:
+            if (game_state == GAMEPLAY) {
                 D_ISPRESSED = true;
-                set_sprite_vx(planthero, 240);
+                set_sprite_vx(planthero, 5);
+            }
+            break;
 
-                break;
-
-            case (W_BREAKCODE):
+        case W_BREAKCODE:
+            if (game_state == GAMEPLAY) {
                 W_ISPRESSED = false;
 
                 if (S_ISPRESSED) {
-                    set_sprite_vy(planthero, 240);
+                    set_sprite_vy(planthero, 5);
                 } else {
                     set_sprite_vy(planthero, 0);
                 }
+            }
+            break;
 
-                break;
-
-            case (A_BREAKCODE):
+        case A_BREAKCODE:
+            if (game_state == GAMEPLAY) {
                 A_ISPRESSED = false;
 
                 if (D_ISPRESSED) {
-                    set_sprite_vx(planthero, 240);
+                    set_sprite_vx(planthero, 5);
                 } else {
                     set_sprite_vx(planthero, 0);
                 }
+            }
+            break;
 
-                break;
-
-            case (S_BREAKCODE):
+        case S_BREAKCODE:
+            if (game_state == GAMEPLAY) {
                 S_ISPRESSED = false;
 
                 if (W_ISPRESSED) {
-                    set_sprite_vy(planthero, -240);
+                    set_sprite_vy(planthero, -5);
                 } else {
                     set_sprite_vy(planthero, 0);
                 }
+            }
+            break;
 
-                break;
-
-            case (D_BREAKCODE):
+        case D_BREAKCODE:
+            if (game_state == GAMEPLAY) {
                 D_ISPRESSED = false;
 
                 if (A_ISPRESSED) {
-                    set_sprite_vx(planthero, -240);
+                    set_sprite_vx(planthero, -5);
                 } else {
                     set_sprite_vx(planthero, 0);
                 }
+            }
+            break;
 
-                break;
-            
-            default:
-                break;
-        }
-
-        HERO_MOVING = W_ISPRESSED || A_ISPRESSED || S_ISPRESSED || D_ISPRESSED;
+        default:
+            break;
     }
+
+    HERO_MOVED = W_ISPRESSED || A_ISPRESSED || S_ISPRESSED || D_ISPRESSED;
 }
 
-void (mouse_event_handler)() {
-    struct mouse_ev* event = mouse_detect_event(&pp);
+void mouse_event_handler() {
+    struct mouse_ev* event = mouse_detect_event(&mouse_pp);
 
-    if (game_state == MENU) {
-        if (event->type == MOUSE_MOV) {
-            set_sprite_vx(mouse, event->delta_x * FRAME_RATE);
-            set_sprite_vy(mouse, -event->delta_y * FRAME_RATE);
+    if (event->type == MOUSE_MOV) {
+        if (game_state == MENU) {
+            set_sprite_vx(mouse, event->delta_x);
+            set_sprite_vy(mouse, -event->delta_y);
             MOUSE_MOVED = true;
         }
-        if (event->type == LB_PRESSED) {
+    }
+
+    if (event->type == LB_PRESSED) {
+        if (game_state == MENU) {
             set_game_state(GAMEPLAY);
         }
     }
-
-    if (game_state == GAMEPLAY) {
-
-    }
 }
 
-void (timer_event_handler)() {
-    if (game_state == MENU) {
-        if (timer0_interrupt_cnt % update_rate == 0) {
+
+void timer_event_handler() {
+    if (timer0_cnt % update_rate == 0) {
+        if (game_state == MENU) {
             if (MOUSE_MOVED) {
-                update_sprite_position(mouse, FIXED_TIMESTEP);
+                update_sprite_position(mouse);
 
                 Sprite* sprites[] = {mouse};
-                render(sprites);
+                render_frame(sprites);
 
                 MOUSE_MOVED = false;
             }
         }
-    }
 
-    if (game_state == GAMEPLAY) {
-        if (timer0_interrupt_cnt % update_rate == 0) {
-            if (HERO_MOVING) {
-                update_sprite_position(planthero, FIXED_TIMESTEP);
+        if (game_state == GAMEPLAY) {
+            if (HERO_MOVED) {
+                update_sprite_position(planthero);
 
                 Sprite* sprites[] = {planthero};
-                render(sprites);
+                render_frame(sprites);
             }
         }
     }

@@ -2,7 +2,7 @@
 
 int mouse_hook_id = 2;
 
-struct packet pp;
+struct packet mouse_pp;
 uint8_t pckt_bt = 0;
 int bytes_read_cnt = 0;
 bool store_pckt_bt = false;
@@ -46,7 +46,7 @@ int (my_mouse_disable_data_reporting)() {
     return 0;
 }
 
-void (mouse_ih)() {
+void (mouse_int_handler)() {
     if (mouse_read_data(&pckt_bt) != OK) {
         printf("ERROR WHILE READING THE PACKET BYTE\n");
     }
@@ -56,11 +56,11 @@ void (mouse_ih)() {
     }
 
     if (store_pckt_bt) {
-      pp.bytes[bytes_read_cnt++] = pckt_bt;
+      mouse_pp.bytes[bytes_read_cnt++] = pckt_bt;
     }
 
     if (bytes_read_cnt == 3) {
-      mouse_parse_packet(&pp);
+      mouse_parse_packet(&mouse_pp);
 
       bytes_read_cnt = 0;
       store_pckt_bt = false;

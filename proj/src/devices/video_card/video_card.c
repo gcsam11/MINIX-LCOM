@@ -14,11 +14,11 @@ static uint8_t bytesPerPixel;
 
 static unsigned int vram_size;
 
-uint16_t get_h_res() {
+uint16_t (get_h_res)() {
   return h_res;
 }
 
-uint16_t get_v_res() {
+uint16_t (get_v_res)() {
   return v_res;
 }
 

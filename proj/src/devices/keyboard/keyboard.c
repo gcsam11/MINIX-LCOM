@@ -27,7 +27,7 @@ int (kbd_unsubscribe_int)() {
   return 0;
 }
 
-void (kbd_ih)() {
+void (kbd_int_handler)() {
     if (kbd_read_data(&scancode) != OK) {
       printf("UNABLE TO READ THE KEYBOARD'S SCANCODE\n");
     }

@@ -14,16 +14,11 @@
 
 #define FREQUENCY 60.0
 #define FRAME_RATE 60.0
-#define FIXED_TIMESTEP 1/FREQUENCY
 
 enum game_state_t {
     MENU,
     GAMEPLAY,
 };
-
-void (set_game_state)(enum game_state_t state);
-
-void (render)(Sprite** sprites);
 
 void (game_init)();
 
@@ -31,7 +26,11 @@ void (game_run)();
 
 void (game_exit)();
 
-void (keyboard_event_handler)();
+void (render_frame)(Sprite** sprites);
+
+void (set_game_state)(enum game_state_t state);
+
+void (kbd_event_handler)();
 
 void (mouse_event_handler)();
 

@@ -12,7 +12,7 @@ int (kbd_unsubscribe_int)();
 
 int(kbd_read_data)(uint8_t *data);
 
-void (kbd_ih)();
+void (kbd_int_handler)();
 
 int(kbc_issue_cmd)(int kbc_cmd_reg, uint8_t cmd);
 
