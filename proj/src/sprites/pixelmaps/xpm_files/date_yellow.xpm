@@ -1,5 +1,5 @@
 /* XPM */
-static char * date_yellow_xpm[] = {
+static xpm_row_t date_yellow_xpm[] = {
 "319 72 75 1",
 " 	c None",
 ".	c #010103",
