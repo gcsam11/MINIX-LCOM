@@ -52,6 +52,8 @@
 #define S_BREAKCODE          0x9F
 #define D_MAKECODE           0x20
 #define D_BREAKCODE          0xA0
+#define ONE_MAKECODE         0x02
+#define TWO_MAKECODE         0x03
 
 #define MOUSE_RESET          0xFF
 #define MOUSE_RESEND         0xFE
