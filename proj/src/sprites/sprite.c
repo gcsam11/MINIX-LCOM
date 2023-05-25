@@ -71,10 +71,10 @@ bool check_sprite_collision(Sprite* sp1, Sprite* sp2) {
     int16_t right2 = (sp2->x + sp2->width);
     int16_t left2 = sp2->x;
 
-    bool overlap_top_bottom = top1 <= bottom2;
-    bool overlap_bottom_top = bottom1 >= top2;
-    bool overlap_right_left = right1 >= left2;
-    bool overlap_left_right = left1 <= right2;
+    bool overlap_top_bottom = top1 < bottom2;
+    bool overlap_bottom_top = bottom1 > top2;
+    bool overlap_right_left = right1 > left2;
+    bool overlap_left_right = left1 < right2;
 
     return (overlap_top_bottom && overlap_bottom_top && overlap_right_left && overlap_left_right);
 }
