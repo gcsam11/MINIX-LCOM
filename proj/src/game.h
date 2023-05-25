@@ -21,15 +21,15 @@ enum game_state_t {
     DATE,
 };
 
+void (render_frame)();
+
+void (set_game_state)(enum game_state_t state);
+
 void (game_init)();
 
 void (game_run)();
 
 void (game_exit)();
-
-void (render_frame)(Sprite** sprites);
-
-void (set_game_state)(enum game_state_t state);
 
 void (kbd_event_handler)();
 
