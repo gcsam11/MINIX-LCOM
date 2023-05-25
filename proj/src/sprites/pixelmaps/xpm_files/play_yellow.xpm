@@ -1,5 +1,5 @@
 /* XPM */
-static char * play_yellow_xpm[] = {
+static xpm_row_t play_yellow_xpm[] = {
 "286 64 74 1",
 " 	c None",
 ".	c #010103",

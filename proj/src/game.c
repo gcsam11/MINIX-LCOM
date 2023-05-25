@@ -19,8 +19,8 @@ Sprite* planthero;
 Sprite* mouse;
 Sprite* zombie;
 Sprite* play_button;
-//Sprite* date_button;
-//Sprite* quit_button;
+Sprite* date_button;
+Sprite* quit_button;
 
 void (render_frame)() {
     vg_clear_frame();
@@ -47,8 +47,10 @@ void (set_game_state)(enum game_state_t state) {
             set_sprite_y(mouse, 384);
 
             memset(render_sprites, 0, sizeof(render_sprites));
-            render_sprites[0] = mouse;
-            render_sprites[1] = play_button;
+            render_sprites[0] = play_button;
+            render_sprites[1] = date_button;
+            render_sprites[2] = quit_button;
+            render_sprites[3] = mouse;
 
             render_frame();
             
@@ -88,9 +90,9 @@ void (game_init)() {
     planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
     zombie = create_sprite(zombie_xpm, 400, 350, 0, 0);
     mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
-    play_button = create_sprite(play_white_xpm, 450, 150, 0, 0);
-    //date_button = create_sprite(date_white_xpm, 450, 250, 0, 0);
-    //quit_button = create_sprite(quit_white_xpm, 450, 350, 0, 0);
+    play_button = create_sprite(play_white_xpm, 400, 100, 0, 0);
+    date_button = create_sprite(date_white_xpm, 385, 200, 0, 0);
+    quit_button = create_sprite(quit_white_xpm, 350, 300, 0, 0);
 
     set_game_state(MENU);
 }
@@ -141,8 +143,8 @@ void (game_exit)() {
     destroy_sprite(&zombie);
     destroy_sprite(&mouse);
     destroy_sprite(&play_button);
-    //destroy_sprite(&date_button);
-    //destroy_sprite(&quit_button);
+    destroy_sprite(&date_button);
+    destroy_sprite(&quit_button);
 
     vg_exit();
 }
@@ -266,7 +268,18 @@ void mouse_event_handler() {
 
     if (event->type == LB_PRESSED) {
         if (game_state == MENU) {
-            set_game_state(GAMEPLAY);
+            bool collided_one = check_sprite_collision(mouse, play_button);
+            if (collided_one) {
+                set_game_state(GAMEPLAY);
+            }
+            bool collided_two = check_sprite_collision(mouse, date_button);
+            if (collided_two) {
+                set_game_state(DATE);
+            }
+            bool collided_esc = check_sprite_collision(mouse, quit_button);
+            if (collided_esc) {
+                running = false;
+            } 
         }
         else if (game_state == GAMEPLAY) {
             
@@ -282,6 +295,25 @@ void timer_event_handler() {
                 update_sprite_position(mouse);
 
                 MOUSE_MOVED = false;
+
+                bool collided_one = check_sprite_collision(mouse, play_button);
+                if (collided_one) {
+                    set_sprite_pixelmap(play_button, play_yellow_xpm);
+                } else {
+                    set_sprite_pixelmap(play_button, play_white_xpm);
+                }
+                bool collided_two = check_sprite_collision(mouse, date_button);
+                if (collided_two) {
+                    set_sprite_pixelmap(date_button, date_yellow_xpm);
+                } else {
+                    set_sprite_pixelmap(date_button, date_white_xpm);
+                }
+                bool collided_esc = check_sprite_collision(mouse, quit_button);
+                if (collided_esc) {
+                    set_sprite_pixelmap(quit_button, quit_yellow_xpm);
+                } else {
+                    set_sprite_pixelmap(quit_button, quit_white_xpm);
+                }
 
                 render_frame();
             }
