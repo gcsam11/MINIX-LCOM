@@ -8,11 +8,14 @@ extern uint32_t timer0_cnt;
 
 enum game_state_t game_state;
 
+bool running;
+
 uint8_t update_rate = FREQUENCY / FRAME_RATE;
 
 bool HERO_MOVED = false, MOUSE_MOVED = false, W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 Sprite* planthero;
+Sprite* zombie;
 Sprite* mouse;
 
 void (game_init)() {
@@ -20,8 +23,9 @@ void (game_init)() {
 
     vg_init(0x118);
 
-    mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
     planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
+    zombie = create_sprite(zombie_xpm, 400, 350, 0, 0);
+    mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
 
     set_game_state(MENU);
 }
@@ -30,7 +34,8 @@ void (game_run)() {
     int r, ipc_status;
     message msg;
 
-    while(scancode != ESC_MAKECODE) {
+    running = true;
+    while(running) {
         if ((r = driver_receive(ANY, &msg, &ipc_status)) != 0) { 
             printf("driver_receive failed with: %d", r);
             continue;
@@ -68,6 +73,7 @@ void (game_exit)() {
     unsubscribe_interrupts();
 
     destroy_sprite(&planthero);
+    destroy_sprite(&zombie);
     destroy_sprite(&mouse);
 
     vg_exit();
@@ -79,8 +85,7 @@ void (render_frame)(Sprite** sprites) {
     vg_draw_background();
 
     size_t num_sprites = sizeof(sprites)/sizeof(Sprite*);
-
-    for (size_t i = 0; i < num_sprites; i++) {
+    for (size_t i = 0; i <= num_sprites; i++) {
         draw_sprite(sprites[i]);
     }
 
@@ -91,6 +96,9 @@ void (set_game_state)(enum game_state_t state) {
     switch (state) {
         case MENU: {
             //vg_set_background(menu_bckground);
+        
+            set_sprite_x(mouse, 518);
+            set_sprite_y(mouse, 384);
 
             Sprite* sprites[] = {mouse};
             render_frame(sprites);
@@ -100,7 +108,14 @@ void (set_game_state)(enum game_state_t state) {
         case GAMEPLAY: {
             vg_set_background(background_gameplay_xpm);
 
-            Sprite* sprites[] = {planthero};
+            set_sprite_vx(planthero, 0);
+            set_sprite_vy(planthero, 0);
+            set_sprite_x(planthero, 0);
+            set_sprite_y(planthero, 0);
+            set_sprite_x(zombie, 400);
+            set_sprite_y(zombie, 350);
+
+            Sprite* sprites[] = {planthero, zombie};
             render_frame(sprites);
 
             break;
@@ -114,6 +129,14 @@ void (set_game_state)(enum game_state_t state) {
 
 void kbd_event_handler() {
     switch (scancode) {
+        case ESC_MAKECODE:
+            if (game_state == MENU) {
+                running = false;
+            }
+            else if (game_state == GAMEPLAY) {
+                set_game_state(MENU);
+            }
+            break;
         case W_MAKECODE:
             if (game_state == GAMEPLAY) {
                 W_ISPRESSED = true;
@@ -233,7 +256,12 @@ void timer_event_handler() {
             if (HERO_MOVED) {
                 update_sprite_position(planthero);
 
-                Sprite* sprites[] = {planthero};
+                bool collided = check_sprite_collision(planthero, zombie);
+                if (collided) {
+                    set_game_state(MENU);
+                }
+
+                Sprite* sprites[] = {planthero, zombie};
                 render_frame(sprites);
             }
         }

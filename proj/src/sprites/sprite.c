@@ -27,6 +27,14 @@ Sprite* (create_sprite)(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t
     return sp;
 }
 
+void (set_sprite_x)(Sprite* sp, int16_t new_x) {
+    sp->x = new_x;
+}
+
+void (set_sprite_y)(Sprite* sp, int16_t new_y) {
+    sp->y = new_y;
+}
+
 void (set_sprite_vx)(Sprite* sp, int16_t new_vx) {
     sp->vx = new_vx;
 }
@@ -43,6 +51,25 @@ void (update_sprite_position)(Sprite* sp) {
     if (sp->x < sp->min_x) sp->x = sp->min_x;
     if (sp->y > sp->max_y) sp->y = sp->max_y;
     if (sp->y < sp->min_y) sp->y = sp->min_y;
+}
+
+bool check_sprite_collision(Sprite* sp1, Sprite* sp2) {
+    int16_t top1 = sp1->y;
+    int16_t bottom1 = (sp1->y + sp1->height);
+    int16_t right1 = (sp1->x + sp1->width);
+    int16_t left1 = sp1->x;
+
+    int16_t top2 = sp2->y;
+    int16_t bottom2 = (sp2->y + sp2->height);
+    int16_t right2 = (sp2->x + sp2->width);
+    int16_t left2 = sp2->x;
+
+    bool overlap_top_bottom = top1 <= bottom2;
+    bool overlap_bottom_top = bottom1 >= top2;
+    bool overlap_right_left = right1 >= left2;
+    bool overlap_left_right = left1 <= right2;
+
+    return (overlap_top_bottom && overlap_bottom_top && overlap_right_left && overlap_left_right);
 }
 
 void (draw_sprite)(Sprite* sp) {
