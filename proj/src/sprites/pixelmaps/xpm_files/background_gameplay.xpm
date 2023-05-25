@@ -1,5 +1,5 @@
 /* XPM */
-static xpm_row_t background_xpm[] = {
+static xpm_row_t background_gameplay_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "1024 768 256 2 ",
 "   c #020203",

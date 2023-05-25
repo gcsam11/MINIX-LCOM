@@ -98,7 +98,7 @@ void (set_game_state)(enum game_state_t state) {
             break;
         }
         case GAMEPLAY: {
-            vg_set_background(background_xpm);
+            vg_set_background(background_gameplay_xpm);
 
             Sprite* sprites[] = {planthero};
             render_frame(sprites);
