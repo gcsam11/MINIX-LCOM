@@ -59,6 +59,10 @@ void (set_sprite_pixelmap)(Sprite* sp, xpm_map_t new_xpm) {
     sp->height = img.height;
 }
 
+bool (sprite_at_left_edge)(Sprite* sp) {
+    return sp->x == sp->max_x;
+}
+
 void reset_sprite_mov(Sprite* sp) {
     sp->x = sp->first_x;
     sp->y = sp->first_y;
