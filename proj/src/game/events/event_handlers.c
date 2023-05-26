@@ -6,6 +6,7 @@ Sprite* mouse;
 Sprite* play_button;
 Sprite* date_button;
 Sprite* quit_button;
+Sprite* title;
 
 Sprite* planthero;
 Sprite* shots[5];

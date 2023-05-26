@@ -6,6 +6,8 @@ extern Sprite* mouse;
 extern Sprite* play_button;
 extern Sprite* date_button;
 extern Sprite* quit_button;
+extern Sprite* title;
+
 
 extern Sprite* planthero;
 extern Sprite* shots[5];
@@ -74,15 +76,17 @@ void (set_game_state)(enum game_state_t state) {
         case MENU: {
             vg_set_background(backgroundMainMenu_xpm);
 
-            play_button = create_sprite(play_white_xpm, 400, 100, 0, 0);
-            date_button = create_sprite(date_white_xpm, 385, 200, 0, 0);
-            quit_button = create_sprite(quit_white_xpm, 350, 300, 0, 0);
+            title = create_sprite(title_xpm, 175, 25, 0, 0);
+            play_button = create_sprite(play_white_xpm, 350, 150, 0, 0);
+            date_button = create_sprite(date_white_xpm, 335, 250, 0, 0);
+            quit_button = create_sprite(quit_white_xpm, 300, 350, 0, 0);
             mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
 
-            render_sprites[0] = play_button;
-            render_sprites[1] = date_button;
-            render_sprites[2] = quit_button;
-            render_sprites[3] = mouse;
+            render_sprites[0] = title;
+            render_sprites[1] = play_button;
+            render_sprites[2] = date_button;
+            render_sprites[3] = quit_button;
+            render_sprites[4] = mouse;
 
             render_frame();
             
@@ -119,6 +123,7 @@ void (clear_game_state)(enum game_state_t state) {
             destroy_sprite(&play_button);
             destroy_sprite(&date_button);
             destroy_sprite(&quit_button);
+            destroy_sprite(&title);
 
             memset(render_sprites, 0, sizeof(render_sprites));
             

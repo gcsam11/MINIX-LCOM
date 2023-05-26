@@ -16,6 +16,7 @@
 #include "xpm_files/date_yellow.xpm"
 #include "xpm_files/quit_white.xpm"
 #include "xpm_files/quit_yellow.xpm"
+#include "xpm_files/title.xpm"
 
 
 #endif
