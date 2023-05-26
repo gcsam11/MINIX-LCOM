@@ -15,23 +15,23 @@ Sprite* (create_sprite)(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t
 
     sp->width = img.width;
     sp->height = img.height;
+
     sp->x = x;
     sp->y = y;
     sp->vx = vx;
     sp->vy = vy;
+
+    sp->first_x = x;
+    sp->first_y = y;
+    sp->first_vx = vx;
+    sp->first_vy = vy;
+
     sp->min_x = 0;
     sp->max_x = get_h_res() - sp->width;
     sp->min_y = 0;
     sp->max_y = get_v_res() - sp->height;
 
     return sp;
-}
-
-void (set_sprite_pixelmap)(Sprite* sp, xpm_map_t new_xpm) {
-    xpm_image_t img;
-    sp->map = xpm_load(new_xpm, XPM_8_8_8, &img);
-    sp->width = img.width;
-    sp->height = img.height;
 }
 
 void (set_sprite_x)(Sprite* sp, int16_t new_x) {
@@ -48,6 +48,22 @@ void (set_sprite_vx)(Sprite* sp, int16_t new_vx) {
 
 void (set_sprite_vy)(Sprite* sp, int16_t new_vy) {
     sp->vy = new_vy;
+}
+
+void (set_sprite_pixelmap)(Sprite* sp, xpm_map_t new_xpm) {
+    if(sp->map) free(sp->map);
+    
+    xpm_image_t img;
+    sp->map = xpm_load(new_xpm, XPM_8_8_8, &img);
+    sp->width = img.width;
+    sp->height = img.height;
+}
+
+void reset_sprite_mov(Sprite* sp) {
+    sp->x = sp->first_x;
+    sp->y = sp->first_y;
+    sp->vx = sp->first_vx;
+    sp->vy = sp->first_vy;
 }
 
 void (update_sprite_position)(Sprite* sp) {

@@ -12,12 +12,12 @@ bool running;
 
 uint8_t update_rate = FREQUENCY / FRAME_RATE;
 
-bool HERO_MOVED, MOUSE_MOVED, W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
+bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 Sprite* render_sprites[20];
 Sprite* planthero;
-Sprite* mouse;
 Sprite* zombie;
+Sprite* mouse;
 Sprite* play_button;
 Sprite* date_button;
 Sprite* quit_button;
@@ -42,12 +42,9 @@ void (render_frame)() {
 void (set_game_state)(enum game_state_t state) {
     switch (state) {
         case MENU: {
+            reset_sprite_mov(mouse);
+
             vg_set_background(backgroundMainMenu_xpm);
-            
-            mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
-            play_button = create_sprite(play_white_xpm, 350, 350, 0, 0);
-            date_button = create_sprite(date_white_xpm, 300, 200, 0, 0);
-            quit_button = create_sprite(quit_white_xpm, 300, 300, 0, 0);
 
             memset(render_sprites, 0, sizeof(render_sprites));
             render_sprites[0] = play_button;
@@ -60,15 +57,15 @@ void (set_game_state)(enum game_state_t state) {
             break;
         }
         case GAMEPLAY: {
+            reset_sprite_mov(planthero);
+            reset_sprite_mov(zombie);
+
             W_ISPRESSED = false;
             A_ISPRESSED = false;
             S_ISPRESSED = false;
             D_ISPRESSED = false;
 
             vg_set_background(backgroundGameplay_xpm);
-
-            planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
-            zombie = create_sprite(zombie_xpm, 500, 325, 0, 0);
 
             memset(render_sprites, 0, sizeof(render_sprites));
             render_sprites[0] = planthero;
@@ -94,12 +91,12 @@ void (game_init)() {
 
     vg_init(0x118);
 
-    planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
-    zombie = create_sprite(zombie_xpm, 400, 350, 0, 0);
     mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
     play_button = create_sprite(play_white_xpm, 400, 100, 0, 0);
     date_button = create_sprite(date_white_xpm, 385, 200, 0, 0);
     quit_button = create_sprite(quit_white_xpm, 350, 300, 0, 0);
+    planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
+    zombie = create_sprite(zombie_xpm, 400, 350, 0, 0);
 
     set_game_state(MENU);
 }
@@ -144,14 +141,14 @@ void (game_run)() {
 }
 
 void (game_exit)() {
-    unsubscribe_interrupts();
-
     destroy_sprite(&planthero);
     destroy_sprite(&zombie);
     destroy_sprite(&mouse);
     destroy_sprite(&play_button);
     destroy_sprite(&date_button);
     destroy_sprite(&quit_button);
+
+    unsubscribe_interrupts();
 
     vg_exit();
 }
@@ -257,8 +254,6 @@ void kbd_event_handler() {
         default:
             break;
     }
-
-    HERO_MOVED = W_ISPRESSED || A_ISPRESSED || S_ISPRESSED || D_ISPRESSED;
 }
 
 void mouse_event_handler() {
@@ -268,12 +263,9 @@ void mouse_event_handler() {
         if (game_state == MENU) {
             set_sprite_vx(mouse, event->delta_x);
             set_sprite_vy(mouse, -event->delta_y);
-
-            MOUSE_MOVED = true;
         }
     }
-
-    if (event->type == LB_PRESSED) {
+    else if (event->type == LB_PRESSED) {
         if (game_state == MENU) {
             bool collided_one = check_sprite_collision(mouse, play_button);
             if (collided_one) {
@@ -289,7 +281,6 @@ void mouse_event_handler() {
             } 
         }
         else if (game_state == GAMEPLAY) {
-            
         }
     }
 }
@@ -298,46 +289,44 @@ void mouse_event_handler() {
 void timer_event_handler() {
     if (timer0_cnt % update_rate == 0) {
         if (game_state == MENU) {
-            if (MOUSE_MOVED) {
-                update_sprite_position(mouse);
+            set_sprite_vx(mouse, 0);
+            set_sprite_vy(mouse, 0);
 
-                MOUSE_MOVED = false;
+            update_sprite_position(mouse);
 
-                bool collided_one = check_sprite_collision(mouse, play_button);
-                if (collided_one) {
-                    set_sprite_pixelmap(play_button, play_yellow_xpm);
-                } else {
-                    set_sprite_pixelmap(play_button, play_white_xpm);
-                }
-                bool collided_two = check_sprite_collision(mouse, date_button);
-                if (collided_two) {
-                    set_sprite_pixelmap(date_button, date_yellow_xpm);
-                } else {
-                    set_sprite_pixelmap(date_button, date_white_xpm);
-                }
-                bool collided_esc = check_sprite_collision(mouse, quit_button);
-                if (collided_esc) {
-                    set_sprite_pixelmap(quit_button, quit_yellow_xpm);
-                } else {
-                    set_sprite_pixelmap(quit_button, quit_white_xpm);
-                }
+            MOUSE_MOVED = false;
 
-                render_frame();
+            bool collided_one = check_sprite_collision(mouse, play_button);
+            if (collided_one) {
+                set_sprite_pixelmap(play_button, play_yellow_xpm);
+            } else {
+                set_sprite_pixelmap(play_button, play_white_xpm);
             }
-        }
+            bool collided_two = check_sprite_collision(mouse, date_button);
+            if (collided_two) {
+                set_sprite_pixelmap(date_button, date_yellow_xpm);
+            } else {
+                set_sprite_pixelmap(date_button, date_white_xpm);
+            }
+            bool collided_esc = check_sprite_collision(mouse, quit_button);
+            if (collided_esc) {
+                set_sprite_pixelmap(quit_button, quit_yellow_xpm);
+            } else {
+                set_sprite_pixelmap(quit_button, quit_white_xpm);
+            }
 
+            render_frame();
+        }
         else if (game_state == GAMEPLAY) {
-            if (HERO_MOVED) {
-                update_sprite_position(planthero);
+            update_sprite_position(planthero);
 
-                bool collided = check_sprite_collision(planthero, zombie);
-                if (collided) {
-                    set_game_state(MENU);
-                    return;
-                }
-
-                render_frame();
+            bool collided = check_sprite_collision(planthero, zombie);
+            if (collided) {
+                set_game_state(MENU);
+                return;
             }
         }
+
+        render_frame();
     }
 }
