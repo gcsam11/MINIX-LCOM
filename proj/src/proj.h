@@ -4,7 +4,7 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
-#include "game.h"
+#include "game/game.h"
 
 int main(int argc, char *argv[]);
 

@@ -4,12 +4,12 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
-#include "devices/keyboard/keyboard.h"
-#include "devices/mouse/mouse.h"
-#include "devices/timer/timer.h"
-#include "devices/video_card/video_card.h"
-#include "sprites/sprite.h"
-#include "sprites/pixelmaps/pixelmaps.h"
+#include "../../devices/keyboard/keyboard.h"
+#include "../../devices/mouse/mouse.h"
+#include "../../devices/timer/timer.h"
+#include "../../devices/video_card/video_card.h"
+#include "../../sprites/sprite.h"
+#include "../../sprites/pixelmaps/pixelmaps.h"
 
 enum game_state_t {
     MENU,
