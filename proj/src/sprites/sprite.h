@@ -19,6 +19,8 @@ typedef struct {
 
 Sprite* (create_sprite)(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t vy);
 
+void (set_sprite_pixelmap)(Sprite* sp, xpm_map_t new_xpm);
+
 void (set_sprite_x)(Sprite* sp, int16_t new_x);
 
 void (set_sprite_y)(Sprite* sp, int16_t new_y);
