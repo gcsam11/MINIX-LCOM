@@ -21,11 +21,6 @@ Sprite* (create_sprite)(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t
     sp->vx = vx;
     sp->vy = vy;
 
-    sp->first_x = x;
-    sp->first_y = y;
-    sp->first_vx = vx;
-    sp->first_vy = vy;
-
     sp->min_x = 0;
     sp->max_x = get_h_res() - sp->width;
     sp->min_y = 0;
@@ -63,13 +58,6 @@ bool (sprite_at_left_edge)(Sprite* sp) {
     return sp->x == sp->max_x;
 }
 
-void reset_sprite_mov(Sprite* sp) {
-    sp->x = sp->first_x;
-    sp->y = sp->first_y;
-    sp->vx = sp->first_vx;
-    sp->vy = sp->first_vy;
-}
-
 void (update_sprite_position)(Sprite* sp) {
     sp->x += sp->vx;
     sp->y += sp->vy;
@@ -80,7 +68,7 @@ void (update_sprite_position)(Sprite* sp) {
     if (sp->y < sp->min_y) sp->y = sp->min_y;
 }
 
-bool check_sprite_collision(Sprite* sp1, Sprite* sp2) {
+bool (check_sprite_collision)(Sprite* sp1, Sprite* sp2) {
     int16_t top1 = sp1->y;
     int16_t bottom1 = (sp1->y + sp1->height);
     int16_t right1 = (sp1->x + sp1->width);

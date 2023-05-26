@@ -92,7 +92,7 @@ void (set_game_state)(enum game_state_t state) {
             vg_set_background(backgroundGameplay_xpm);
 
             planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
-            zombies[0] = create_sprite(zombie_xpm, 518, 384, 0, 0);
+            zombies[0] = create_sprite(zombie_xpm, 200, 384, 0, 0);
 
             render_sprites[0] = planthero;
             render_sprites[6] = zombies[0];
@@ -186,6 +186,7 @@ bool (check_hero_zombies_collisions)() {
 void (update_shots)() {
     for (int i = 0; i < 5; i++) {
         if (shots[i] != NULL) {
+            printf("update %d\n", i);
             update_sprite_position(shots[i]);
         }
     }
@@ -201,8 +202,6 @@ void (manage_zombies_shot)() {
                         delete_zombie(i);
 
                         delete_shot(j);
-
-                        shots_fired--;
                     }
                 };
             }
@@ -221,13 +220,17 @@ void (manage_shots_at_edge)() {
 }
 
 void (delete_zombie)(int pos) {
+    printf("zombie to delete %d\n", pos);
     destroy_sprite(&zombies[pos]);
     zombies[pos] = NULL;
     render_sprites[6 + pos] = NULL;
 }
 
 void (delete_shot)(int pos) {
+    printf("shot to delete %d\n", pos);
     destroy_sprite(&shots[pos]);
     shots[pos] = NULL;
     render_sprites[1 + pos] = NULL;
+
+    shots_fired--;
 }

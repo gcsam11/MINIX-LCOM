@@ -178,10 +178,11 @@ void (mouse_event_handler)() {
         }
         else if (game_state == GAMEPLAY) {
             if (shots_fired < 5) {
-                Sprite* energy_ball = create_sprite(energy_ball_xpm, planthero->x + 152, planthero->y + 40, 10, 0);
+                Sprite* energy_ball = create_sprite(energy_ball_xpm, planthero->x + 152, planthero->y + 40, 1, 0);
 
                 for (int i = 0; i < 5; i++) {
                     if (shots[i] == NULL) {
+                        printf("create: %d\n", i);
                         shots[i] = energy_ball;
                         render_sprites[1 + i] = energy_ball;
                         break;
