@@ -1,7 +1,7 @@
 # name of the program (Minix service)
 PROG=proj
 
-.PATH: devices devices/keyboard devices/mouse devices/rtc devices/timer devices/video_card game game/aux game/events sprites sprites/pixelmaps
+.PATH: devices devices/keyboard devices/mouse devices/rtc devices/timer devices/video_card game game/game_aux game/events sprites sprites/pixelmaps
 
 # source code files to be compiled
 SRCS = proj.c game.c event_handlers.c game_aux.c sprite.c keyboard.c mouse.c rtc.c timer.c video_card.c utils.c

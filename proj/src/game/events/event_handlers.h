@@ -4,7 +4,7 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
-#include "../aux/game_aux.h"
+#include "../game_aux/game_aux.h"
 #include "../../devices/keyboard/keyboard.h"
 #include "../../devices/mouse/mouse.h"
 #include "../../devices/timer/timer.h"

@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #include "events/event_handlers.h"
-#include "aux/game_aux.h"
+#include "game_aux/game_aux.h"
 
 void (game_init)();
 
