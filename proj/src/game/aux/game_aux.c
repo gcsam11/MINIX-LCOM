@@ -186,7 +186,6 @@ bool (check_hero_zombies_collisions)() {
 void (update_shots)() {
     for (int i = 0; i < 5; i++) {
         if (shots[i] != NULL) {
-            printf("update %d\n", i);
             update_sprite_position(shots[i]);
         }
     }
@@ -220,14 +219,12 @@ void (manage_shots_at_edge)() {
 }
 
 void (delete_zombie)(int pos) {
-    printf("zombie to delete %d\n", pos);
     destroy_sprite(&zombies[pos]);
     zombies[pos] = NULL;
     render_sprites[6 + pos] = NULL;
 }
 
 void (delete_shot)(int pos) {
-    printf("shot to delete %d\n", pos);
     destroy_sprite(&shots[pos]);
     shots[pos] = NULL;
     render_sprites[1 + pos] = NULL;
