@@ -27,9 +27,13 @@ void (clear_game_state)(enum game_state_t state);
 
 void (render_frame)();
 
+void (create_zombie_hord)();
+
 bool (check_hero_zombies_collisions)();
 
 void (update_shots)();
+
+void (update_zombies)();
 
 void (manage_zombies_shot)();
 
