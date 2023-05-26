@@ -19,6 +19,7 @@
         "sprite.h": "c",
         "pixelmaps.h": "c",
         "kbc_macros.h": "c",
-        "random": "c"
+        "random": "c",
+        "game_aux.h": "c"
     }
 }

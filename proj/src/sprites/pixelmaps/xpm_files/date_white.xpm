@@ -1,5 +1,5 @@
 /* XPM */
-static char * date_white_xpm[] = {
+static xpm_row_t date_white_xpm[] = {
 "315 61 34 1",
 " 	c None",
 ".	c #202020",
