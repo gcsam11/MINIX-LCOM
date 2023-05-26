@@ -15,6 +15,10 @@ extern bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 extern uint8_t shots_fired;
 
+extern uint8_t zombies_alive;
+
+extern int zombies_vx;
+
 extern enum game_state_t game_state;
 
 uint8_t kbd_irq_set, timer_irq_set, mouse_irq_set;
@@ -92,11 +96,10 @@ void (set_game_state)(enum game_state_t state) {
             vg_set_background(backgroundGameplay_xpm);
 
             planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
-            create_zombie_hord();
 
             render_sprites[0] = planthero;
-            
-            memcpy(&render_sprites[6], zombies, sizeof(zombies));
+
+            create_zombie_hord();
 
             render_frame();
 
@@ -132,6 +135,8 @@ void (clear_game_state)(enum game_state_t state) {
             A_ISPRESSED = false;
             S_ISPRESSED = false;
             D_ISPRESSED = false;
+
+            zombies_vx = -1;
 
             destroy_sprite(&planthero);
             render_sprites[0] = NULL;
@@ -180,13 +185,17 @@ void (create_zombie_hord)() {
     for (int i = 0; i < 2; i++) {
         y_spawn = 110;
         for (int j = 0; j < 5; j++) {
-            Sprite* zombie = create_sprite(zombie_xpm, x_spawn, y_spawn, -1, 0);
+            Sprite* zombie = create_sprite(zombie_xpm, x_spawn, y_spawn, zombies_vx, 0);
             zombies[5*i + j] = zombie;
 
             y_spawn += 110;
         }
         x_spawn = 966;
     }
+
+    memcpy(&render_sprites[6], zombies, sizeof(zombies));
+
+    zombies_alive = 10;
 }
 
 bool (check_hero_zombies_collisions)() {
@@ -250,6 +259,8 @@ void (delete_zombie)(int pos) {
     destroy_sprite(&zombies[pos]);
 
     render_sprites[6 + pos] = NULL;
+
+    zombies_alive--;
 }
 
 void (delete_shot)(int pos) {

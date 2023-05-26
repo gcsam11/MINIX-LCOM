@@ -19,6 +19,10 @@ bool WHITE1_SET = true, WHITE2_SET = true, WHITEQUIT_SET = true;
 
 uint8_t shots_fired = 0;
 
+uint8_t zombies_alive;
+
+int zombies_vx = -1;
+
 uint8_t update_rate = FREQUENCY / FRAME_RATE;
 
 enum game_state_t game_state;
@@ -255,6 +259,11 @@ void (timer_event_handler)() {
             update_shots();
 
             manage_zombies_shot();
+
+            if (zombies_alive == 0) {
+                create_zombie_hord();
+                zombies_vx *= 2;
+            }
 
             manage_shots_at_edge();
 
