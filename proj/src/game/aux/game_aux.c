@@ -15,9 +15,9 @@ extern bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 extern uint8_t shots_fired;
 
-enum game_state_t game_state;
+extern enum game_state_t game_state;
 
-uint8_t timer_irq_set, kbd_irq_set, mouse_irq_set;
+uint8_t kbd_irq_set, timer_irq_set, mouse_irq_set;
 
 int (subscribe_interrupts)() {
 

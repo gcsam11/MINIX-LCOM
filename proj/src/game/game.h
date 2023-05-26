@@ -4,8 +4,8 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
-#include "event_handlers.h"
-#include "game_aux.h"
+#include "events/event_handlers.h"
+#include "aux/game_aux.h"
 
 void (game_init)();
 

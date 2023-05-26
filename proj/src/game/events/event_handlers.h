@@ -4,7 +4,12 @@
 #include <lcom/lcf.h>
 #include <stdint.h>
 
-#include "game_aux.h"
+#include "../aux/game_aux.h"
+#include "../../devices/keyboard/keyboard.h"
+#include "../../devices/mouse/mouse.h"
+#include "../../devices/timer/timer.h"
+#include "../../sprites/sprite.h"
+#include "../../sprites/pixelmaps/pixelmaps.h"
 
 #define FREQUENCY 60.0
 #define FRAME_RATE 60.0

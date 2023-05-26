@@ -21,7 +21,7 @@ uint8_t shots_fired = 0;
 
 uint8_t update_rate = FREQUENCY / FRAME_RATE;
 
-extern enum game_state_t game_state;
+enum game_state_t game_state;
 
 bool running;
 
