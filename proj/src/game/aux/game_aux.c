@@ -92,10 +92,11 @@ void (set_game_state)(enum game_state_t state) {
             vg_set_background(backgroundGameplay_xpm);
 
             planthero = create_sprite(planthero_xpm, 0, 0, 0, 0);
-            zombies[0] = create_sprite(zombie_xpm, 200, 384, 0, 0);
+            create_zombie_hord();
 
             render_sprites[0] = planthero;
-            render_sprites[6] = zombies[0];
+            
+            memcpy(&render_sprites[6], zombies, sizeof(zombies));
 
             render_frame();
 
@@ -115,12 +116,14 @@ void (set_game_state)(enum game_state_t state) {
 void (clear_game_state)(enum game_state_t state) {
     switch (state) {
         case MENU: {
-            destroy_sprite(&mouse);
             destroy_sprite(&play_button);
+            render_sprites[0] = NULL;
             destroy_sprite(&date_button);
+            render_sprites[1] = NULL;
             destroy_sprite(&quit_button);
-
-            memset(render_sprites, 0, sizeof(render_sprites));
+            render_sprites[2] = NULL;
+            destroy_sprite(&mouse);
+            render_sprites[3] = NULL;
             
             break;
         }
@@ -131,6 +134,7 @@ void (clear_game_state)(enum game_state_t state) {
             D_ISPRESSED = false;
 
             destroy_sprite(&planthero);
+            render_sprites[0] = NULL;
 
             for (int i = 0; i < 5; i++) {
                 if(shots[i] != NULL) {
@@ -138,13 +142,11 @@ void (clear_game_state)(enum game_state_t state) {
                 }
             }
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 10; i++) {
                 if(zombies[i] != NULL) {
                     delete_zombie(i);
                 }
             }
-            
-            memset(render_sprites, 0, sizeof(render_sprites));
 
             break;
         }
@@ -171,6 +173,22 @@ void (render_frame)() {
     page_flip();
 }
 
+void (create_zombie_hord)() {
+    int x_spawn = 908;
+    int y_spawn;
+
+    for (int i = 0; i < 2; i++) {
+        y_spawn = 110;
+        for (int j = 0; j < 5; j++) {
+            Sprite* zombie = create_sprite(zombie_xpm, x_spawn, y_spawn, -1, 0);
+            zombies[5*i + j] = zombie;
+
+            y_spawn += 110;
+        }
+        x_spawn = 966;
+    }
+}
+
 bool (check_hero_zombies_collisions)() {
     for (int i = 0; i < 10; i++) {
         if (zombies[i] != NULL) {
@@ -191,6 +209,14 @@ void (update_shots)() {
     }
 }
 
+void (update_zombies)() {
+    for (int i = 0; i < 10; i++) {
+        if (zombies[i] != NULL) {
+            update_sprite_position(zombies[i]);
+        }
+    }
+}
+
 void (manage_zombies_shot)() {
     for (int i = 0; i < 10; i++) {
         if (zombies[i] != NULL) {
@@ -201,6 +227,8 @@ void (manage_zombies_shot)() {
                         delete_zombie(i);
 
                         delete_shot(j);
+
+                        break;
                     }
                 };
             }
@@ -220,13 +248,13 @@ void (manage_shots_at_edge)() {
 
 void (delete_zombie)(int pos) {
     destroy_sprite(&zombies[pos]);
-    zombies[pos] = NULL;
+
     render_sprites[6 + pos] = NULL;
 }
 
 void (delete_shot)(int pos) {
     destroy_sprite(&shots[pos]);
-    shots[pos] = NULL;
+    
     render_sprites[1 + pos] = NULL;
 
     shots_fired--;

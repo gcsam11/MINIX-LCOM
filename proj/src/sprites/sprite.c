@@ -95,9 +95,13 @@ void (clear_sprite)(Sprite* sp) {
     vg_clear_pixel_map(sp->y, sp->y, sp->width, sp->height);
 }
 
-void (destroy_sprite)(Sprite** sp) {
-    if(*sp == NULL) return;
-    if((*sp)->map) free((*sp)->map);
+void destroy_sprite(Sprite** sp) {
+    if((*sp) == NULL)
+        return;
+
+    if((*sp)->map)
+        free((*sp)->map);
+        
     free(*sp);
     *sp = NULL;
 }

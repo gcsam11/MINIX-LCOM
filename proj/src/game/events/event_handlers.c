@@ -178,7 +178,7 @@ void (mouse_event_handler)() {
         }
         else if (game_state == GAMEPLAY) {
             if (shots_fired < 5) {
-                Sprite* energy_ball = create_sprite(energy_ball_xpm, planthero->x + 152, planthero->y + 40, 2, 0);
+                Sprite* energy_ball = create_sprite(energy_ball_xpm, planthero->x + 152, planthero->y + 40, 10, 0);
 
                 for (int i = 0; i < 5; i++) {
                     if (shots[i] == NULL) {
@@ -241,6 +241,8 @@ void (timer_event_handler)() {
         }
         else if (game_state == GAMEPLAY) {
             update_sprite_position(planthero);
+
+            update_zombies();
 
             if (check_hero_zombies_collisions() == true) {
                 clear_game_state(GAMEPLAY);
