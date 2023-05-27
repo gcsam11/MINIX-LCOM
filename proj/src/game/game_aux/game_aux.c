@@ -80,10 +80,10 @@ void (set_game_state)(enum game_state_t state) {
         case MENU: {
             vg_set_background(backgroundMainMenu_xpm);
 
-            title = create_sprite(title_xpm, 175, 25, 0, 0);
-            play_button = create_sprite(play_white_xpm, 350, 150, 0, 0);
-            date_button = create_sprite(date_white_xpm, 335, 250, 0, 0);
-            quit_button = create_sprite(quit_white_xpm, 300, 350, 0, 0);
+            title = create_sprite(title_xpm, 175, 117, 0, 0);
+            play_button = create_sprite(play_white_xpm, 368, 297, 0, 0);
+            date_button = create_sprite(date_white_xpm, 354, 397, 0, 0);
+            quit_button = create_sprite(quit_white_xpm, 306, 497, 0, 0);
             mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
 
             render_sprites[0] = title;
@@ -185,7 +185,7 @@ void (render_frame)() {
 }
 
 void (create_zombie_hord)() {
-    int x_spawn = 908;
+    int x_spawn = 882;
     int y_spawn;
 
     for (int i = 0; i < 2; i++) {
@@ -196,7 +196,7 @@ void (create_zombie_hord)() {
 
             y_spawn += 110;
         }
-        x_spawn = 966;
+        x_spawn = 953;
     }
 
     memcpy(&render_sprites[6], zombies, sizeof(zombies));
