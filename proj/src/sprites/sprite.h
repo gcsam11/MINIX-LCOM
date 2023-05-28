@@ -9,10 +9,12 @@
 
 typedef struct {
     uint16_t width, height;
+    size_t size;
     int16_t x, y;
     int16_t vx, vy;
     uint16_t min_x, max_x, min_y, max_y;
     uint8_t *map;
+    uint8_t *bytes;
 } Sprite;
 
 Sprite* (create_sprite)(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t vy);

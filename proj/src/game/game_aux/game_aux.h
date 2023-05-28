@@ -7,9 +7,11 @@
 #include "../../devices/keyboard/keyboard.h"
 #include "../../devices/mouse/mouse.h"
 #include "../../devices/timer/timer.h"
+#include "../../devices/rtc/rtc.h"
 #include "../../devices/video_card/video_card.h"
 #include "../../sprites/sprite.h"
 #include "../../sprites/pixelmaps/pixelmaps.h"
+#include "../../devices/utils.h"
 
 enum game_state_t {
     MENU,
@@ -42,5 +44,11 @@ void (manage_shots_at_edge)();
 void (delete_zombie)(int pos);
 
 void (delete_shot)(int pos);
+
+void get_date();
+
+void draw_string(const char *string, uint16_t x, uint16_t y, uint8_t scale);
+
+void draw_character(const char character, uint16_t x, uint16_t y, uint8_t scale);
 
 #endif

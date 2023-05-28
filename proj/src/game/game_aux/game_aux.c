@@ -13,6 +13,8 @@ extern Sprite* planthero;
 extern Sprite* shots[5];
 extern Sprite* zombies[10];
 
+static xpm_image_t font;
+
 extern bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 extern uint8_t shots_fired;
@@ -24,6 +26,8 @@ extern int zombies_vx;
 extern enum game_state_t game_state;
 
 uint8_t kbd_irq_set, timer_irq_set, mouse_irq_set;
+
+static char date_str[20];
 
 int (subscribe_interrupts)() {
 
@@ -110,6 +114,16 @@ void (set_game_state)(enum game_state_t state) {
             break;
         }
         case DATE: {
+            vg_set_background(backgroundMainMenu_xpm);
+
+            xpm_load(font_xpm, XPM_8_8_8, &font);
+
+            get_date();
+
+            draw_string(date_str, 350, 350, 20);
+
+            render_frame();
+            
             break;
         }
         
@@ -275,4 +289,59 @@ void (delete_shot)(int pos) {
     render_sprites[1 + pos] = NULL;
 
     shots_fired--;
+}
+
+void get_date() {
+
+  Date date = rtc_read_date();
+  //char date_str[20];
+
+  char day[3];
+  char month[3];
+  char year[5];
+
+  sprintf(day, "%02d", date.day);
+  sprintf(month, "%02d", date.month);
+  sprintf(year, "%02d", date.year);
+
+  strcpy(date_str, day);
+  strcat(date_str, "/");
+  strcat(date_str, month);
+  strcat(date_str, "/");
+  strcat(date_str, year);
+}
+
+void draw_string(const char *string, uint16_t x, uint16_t y, uint8_t scale) {
+  for (unsigned int i = 0; i < strlen(string); i++) {
+    if (string[i] != ' ' && string[i] != '/') {
+      draw_character(string[i], x + (scale * 6 * i) , y, scale);
+    } else {
+      i++;
+      draw_character(string[i], x + (scale * 6 * i) , y, scale);
+    }
+  }
+}
+
+void draw_character(const char character, uint16_t x, uint16_t y, uint8_t scale) {
+  uint8_t *pnt = NULL;
+  uint8_t font_bpp = (font.size / (font.height * font.width));
+  unsigned char *init_pnt;
+
+  init_pnt = font.bytes;
+  
+  if (!is_alpha(character)) {
+    int num = character - '0';
+    pnt = init_pnt + (6 * num) * font_bpp;
+  } else {
+    int num = (int) character - 65;
+    if (num < 0 || num > 25) return;
+
+    if (num >=0 && num <= 14) {
+      pnt = init_pnt + (6 * (num + 1)) * font_bpp + (font.width * 7) * font_bpp;
+    } else if (num >= 15 && num <=25) {
+      pnt = init_pnt + (6 * (num - 15)) * font_bpp + (font.width * 14) * font_bpp;
+    }
+  }
+
+  vg_draw_character(font, x, y, scale, pnt);
 }

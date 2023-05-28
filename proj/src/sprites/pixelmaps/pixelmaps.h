@@ -18,5 +18,6 @@
 #include "xpm_files/quit_yellow.xpm"
 #include "xpm_files/title.xpm"
 
+#include "xpm_files/font.xpm"
 
 #endif

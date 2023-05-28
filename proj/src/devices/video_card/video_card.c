@@ -14,6 +14,9 @@ static uint8_t bytesPerPixel;
 
 static unsigned int vram_size;
 
+static vbe_mode_info_t vmi;
+static void *second_addr;
+
 uint16_t (get_h_res)() {
   return h_res;
 }
@@ -232,4 +235,35 @@ void (vg_draw_pixel)(uint8_t** vmem_ptr, uint32_t* color_ptr) {
   if (*color_ptr == CHROMA_KEY_GREEN_888) return;
 
   memcpy(*vmem_ptr, color_ptr, bytesPerPixel);
+}
+
+void vg_draw_character(xpm_image_t font, uint16_t x, uint16_t y, uint8_t scale, uint8_t *pnt) {
+  uint16_t _x = x;
+
+  for (int i = 0; i < 7; i++) { // y
+    for (int k = 0; k < scale; k++) {
+      for (int j = 0; j < 6; j++) { // x
+        for (int l = 0; l < scale; l++) {
+          uint64_t offset = ((y * vmi.XResolution) + x) * (vmi.BytesPerScanLine / vmi.XResolution);
+          void *addr = (void *) ((char *) second_addr + offset);
+
+          uint8_t bpp = font.size / (font.height * font.width);
+
+          uint32_t color = 0;
+          for (size_t off = 0; off < 3; off++)
+            color |= *(pnt + (j + i*font.width) * bpp + off) << (off * 8);
+
+          if (color == 0x00b140) {
+            x++;
+            continue;
+          }
+        
+          memcpy(addr, pnt + ((i * font.width) + j) * bpp, vmi.BytesPerScanLine / vmi.XResolution);
+          x++;
+        }
+      }
+    y++;
+    x = _x;
+    }
+  }
 }
