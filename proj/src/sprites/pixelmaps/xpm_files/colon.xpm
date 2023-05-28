@@ -3,7 +3,7 @@ static xpm_row_t colon_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "2 9 2 1 ",
 "  c None",
-". c #000000",
+". c #FFFFFF",
 /* pixels */
 "..",
 "..",

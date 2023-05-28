@@ -4,14 +4,13 @@ extern Sprite* render_sprites[20];
 
 extern Sprite* mouse;
 extern Sprite* play_button;
-extern Sprite* date_button;
 extern Sprite* quit_button;
 extern Sprite* title;
-
 
 extern Sprite* planthero;
 extern Sprite* shots[5];
 extern Sprite* zombies[10];
+extern Sprite* score_sprite[4];
 
 static xpm_image_t font;
 
@@ -21,13 +20,25 @@ extern uint8_t shots_fired;
 
 extern uint8_t zombies_alive;
 
-extern int zombies_vx;
+extern int zombies_vy;
+
+extern uint16_t score;
 
 extern enum game_state_t game_state;
 
 uint8_t kbd_irq_set, timer_irq_set, mouse_irq_set;
 
-static char date_str[20];
+static const xpm_map_t digit_xpm_array[10] = { zero_xpm,
+                                               one_xpm,
+                                               two_xpm,
+                                               three_xpm,
+                                               four_xpm,
+                                               five_xpm,
+                                               six_xpm,
+                                               seven_xpm,
+                                               eight_xpm,
+                                               nine_xpm
+                                                         };
 
 int (subscribe_interrupts)() {
 
@@ -86,15 +97,13 @@ void (set_game_state)(enum game_state_t state) {
 
             title = create_sprite(title_xpm, 175, 117, 0, 0);
             play_button = create_sprite(play_white_xpm, 368, 297, 0, 0);
-            date_button = create_sprite(date_white_xpm, 354, 397, 0, 0);
-            quit_button = create_sprite(quit_white_xpm, 306, 497, 0, 0);
-            mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
+            quit_button = create_sprite(quit_white_xpm, 306, 397, 0, 0);
+            mouse = create_sprite(mouse_xpm, 518, 234, 0, 0);
 
             render_sprites[0] = title;
             render_sprites[1] = play_button;
-            render_sprites[2] = date_button;
-            render_sprites[3] = quit_button;
-            render_sprites[4] = mouse;
+            render_sprites[2] = quit_button;
+            render_sprites[3] = mouse;
 
             render_frame();
             
@@ -109,21 +118,22 @@ void (set_game_state)(enum game_state_t state) {
 
             create_zombie_hord();
 
+            Sprite* dig1 = create_sprite(zero_xpm, 984, 0, 0, 0);
+            Sprite* dig2 = create_sprite(zero_xpm, 994, 0, 0, 0);
+            Sprite* dig3 = create_sprite(zero_xpm, 1004, 0, 0, 0);
+            Sprite* dig4 = create_sprite(zero_xpm, 1014, 0, 0, 0);
+
+            score_sprite[0] = dig1;
+            score_sprite[1] = dig2;
+            score_sprite[2] = dig3;
+            score_sprite[3] = dig4;
+            render_sprites[16] = dig1;
+            render_sprites[17] = dig2;
+            render_sprites[18] = dig3;
+            render_sprites[19] = dig4;
+
             render_frame();
 
-            break;
-        }
-        case DATE: {
-            vg_set_background(backgroundMainMenu_xpm);
-
-            xpm_load(font_xpm, XPM_8_8_8, &font);
-
-            get_date();
-
-            draw_string(date_str, 350, 350, 20);
-
-            render_frame();
-            
             break;
         }
         
@@ -141,12 +151,10 @@ void (clear_game_state)(enum game_state_t state) {
             render_sprites[0] = NULL;
             destroy_sprite(&play_button);
             render_sprites[1] = NULL;
-            destroy_sprite(&date_button);
-            render_sprites[2] = NULL;
             destroy_sprite(&quit_button);
-            render_sprites[3] = NULL;
+            render_sprites[2] = NULL;
             destroy_sprite(&mouse);
-            render_sprites[4] = NULL;
+            render_sprites[3] = NULL;
             
             break;
         }
@@ -156,7 +164,9 @@ void (clear_game_state)(enum game_state_t state) {
             S_ISPRESSED = false;
             D_ISPRESSED = false;
 
-            zombies_vx = -1;
+            zombies_vy = 1;
+
+            score = 0;
 
             destroy_sprite(&planthero);
             render_sprites[0] = NULL;
@@ -173,9 +183,15 @@ void (clear_game_state)(enum game_state_t state) {
                 }
             }
 
-            break;
-        }
-        case DATE: {
+            destroy_sprite(&score_sprite[0]);
+            destroy_sprite(&score_sprite[1]);
+            destroy_sprite(&score_sprite[2]);
+            destroy_sprite(&score_sprite[3]);
+            render_sprites[16] = NULL;
+            render_sprites[17] = NULL;
+            render_sprites[18] = NULL;
+            render_sprites[19] = NULL;
+
             break;
         }
         
@@ -205,7 +221,7 @@ void (create_zombie_hord)() {
     for (int i = 0; i < 2; i++) {
         y_spawn = 110;
         for (int j = 0; j < 5; j++) {
-            Sprite* zombie = create_sprite(zombie_xpm, x_spawn, y_spawn, zombies_vx, 0);
+            Sprite* zombie = create_sprite(zombie_xpm, x_spawn, y_spawn, 0, zombies_vy);
             zombies[5*i + j] = zombie;
 
             y_spawn += 110;
@@ -230,6 +246,28 @@ bool (check_hero_zombies_collisions)() {
     return false;
 }
 
+bool (check_zombies_at_left_edge)() {
+    for (int i = 0; i < 10; i++) {
+        if (zombies[i] != NULL) {
+            if (sprite_at_left_edge(zombies[i])) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool (check_zombies_at_v_edge)() {
+    for (int i = 0; i < 10; i++) {
+        if (zombies[i] != NULL) {
+            if (sprite_at_top_edge(zombies[i]) || sprite_at_bottom_edge(zombies[i])) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void (update_shots)() {
     for (int i = 0; i < 5; i++) {
         if (shots[i] != NULL) {
@@ -246,6 +284,16 @@ void (update_zombies)() {
     }
 }
 
+void (advance_zombie_hord)() {
+    zombies_vy *= -1;
+    for (int i = 0; i < 10; i++) {
+        if (zombies[i] != NULL) {
+            move_sprite_left(zombies[i], 50);
+            set_sprite_vy(zombies[i], zombies_vy);
+        }
+    }
+}
+
 void (manage_zombies_shot)() {
     for (int i = 0; i < 10; i++) {
         if (zombies[i] != NULL) {
@@ -257,6 +305,9 @@ void (manage_zombies_shot)() {
 
                         delete_shot(j);
 
+                        score += 10;
+                        update_score_pixmap();
+
                         break;
                     }
                 };
@@ -265,10 +316,10 @@ void (manage_zombies_shot)() {
     }
 }
 
-void (manage_shots_at_edge)() {
+void (manage_shots_at_right_edge)() {
     for (int i = 0; i < 5; i++) {
         if (shots[i] != NULL) {
-            if (sprite_at_left_edge(shots[i]) == true) {
+            if (sprite_at_right_edge(shots[i])) {
                 delete_shot(i);
             }
         }
@@ -294,7 +345,7 @@ void (delete_shot)(int pos) {
 void get_date() {
 
   Date date = rtc_read_date();
-  //char date_str[20];
+  char date_str[20];
 
   char day[3];
   char month[3];
@@ -344,4 +395,20 @@ void draw_character(const char character, uint16_t x, uint16_t y, uint8_t scale)
   }
 
   vg_draw_character(font, x, y, scale, pnt);
+}
+
+void (update_score_pixmap)() {
+    uint16_t curr_score = score;
+    if (curr_score >= 0 && curr_score <= 9999) {
+        int digit;
+        int cnt = 0;
+        while (curr_score > 0) {
+            digit = curr_score % 10;
+
+            set_sprite_pixelmap(score_sprite[3 - cnt], digit_xpm_array[digit]);
+
+            curr_score /= 10;
+            cnt++;
+        }
+    }
 }

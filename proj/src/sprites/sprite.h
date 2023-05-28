@@ -31,7 +31,15 @@ void (set_sprite_vy)(Sprite* sp, int16_t new_vy);
 
 void (update_sprite_position)(Sprite* sp);
 
+void (move_sprite_left)(Sprite* sp, uint16_t dis);
+
+bool (sprite_at_right_edge)(Sprite* sp);
+
 bool (sprite_at_left_edge)(Sprite* sp);
+
+bool (sprite_at_top_edge)(Sprite* sp);
+
+bool (sprite_at_bottom_edge)(Sprite* sp);
 
 bool (check_sprite_collision)(Sprite* sp1, Sprite* sp2);
 

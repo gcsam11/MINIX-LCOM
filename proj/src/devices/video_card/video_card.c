@@ -160,7 +160,7 @@ int (page_flip)() {
 
   r.ax = 0x4F07;
   r.bh = 0x00;
-  r.bl = 0x00;
+  r.bl = 0x80;
   r.cx = 0;
   r.intno = 0x10;
 

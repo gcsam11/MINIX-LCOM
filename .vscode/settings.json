@@ -20,6 +20,7 @@
         "pixelmaps.h": "c",
         "kbc_macros.h": "c",
         "random": "c",
-        "game_aux.h": "c"
+        "game_aux.h": "c",
+        "ratio": "c"
     }
 }
