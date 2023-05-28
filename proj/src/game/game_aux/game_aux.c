@@ -1,6 +1,6 @@
 #include "game_aux.h"
 
-extern Sprite* render_sprites[20];
+extern Sprite* render_sprites[21];
 
 extern Sprite* mouse;
 extern Sprite* play_button;
@@ -21,6 +21,8 @@ extern uint8_t shots_fired;
 extern uint8_t zombies_alive;
 
 extern int zombies_vy;
+
+extern int16_t hero_v;
 
 extern uint16_t score;
 
@@ -118,19 +120,21 @@ void (set_game_state)(enum game_state_t state) {
 
             create_zombie_hord();
 
-            Sprite* dig1 = create_sprite(zero_xpm, 984, 0, 0, 0);
-            Sprite* dig2 = create_sprite(zero_xpm, 994, 0, 0, 0);
-            Sprite* dig3 = create_sprite(zero_xpm, 1004, 0, 0, 0);
-            Sprite* dig4 = create_sprite(zero_xpm, 1014, 0, 0, 0);
+            render_sprites[16] = create_sprite(score_xpm, 734, 0, 0, 0);
+
+            Sprite* dig1 = create_sprite(zero_xpm, 904, 0, 0, 0);
+            Sprite* dig2 = create_sprite(zero_xpm, 934, 0, 0, 0);
+            Sprite* dig3 = create_sprite(zero_xpm, 964, 0, 0, 0);
+            Sprite* dig4 = create_sprite(zero_xpm, 994, 0, 0, 0);
 
             score_sprite[0] = dig1;
             score_sprite[1] = dig2;
             score_sprite[2] = dig3;
             score_sprite[3] = dig4;
-            render_sprites[16] = dig1;
-            render_sprites[17] = dig2;
-            render_sprites[18] = dig3;
-            render_sprites[19] = dig4;
+            render_sprites[17] = dig1;
+            render_sprites[18] = dig2;
+            render_sprites[19] = dig3;
+            render_sprites[20] = dig4;
 
             render_frame();
 
@@ -165,6 +169,7 @@ void (clear_game_state)(enum game_state_t state) {
             D_ISPRESSED = false;
 
             zombies_vy = 1;
+            hero_v = 5;
 
             score = 0;
 
@@ -183,14 +188,17 @@ void (clear_game_state)(enum game_state_t state) {
                 }
             }
 
+            destroy_sprite(&render_sprites[16]);
+
             destroy_sprite(&score_sprite[0]);
             destroy_sprite(&score_sprite[1]);
             destroy_sprite(&score_sprite[2]);
             destroy_sprite(&score_sprite[3]);
-            render_sprites[16] = NULL;
+
             render_sprites[17] = NULL;
             render_sprites[18] = NULL;
             render_sprites[19] = NULL;
+            render_sprites[20] = NULL;
 
             break;
         }
@@ -205,7 +213,7 @@ void (render_frame)() {
 
     vg_draw_background();
     
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 21; i++) {
         if (render_sprites[i] != NULL) {
             draw_sprite(render_sprites[i]);
         }
@@ -341,7 +349,7 @@ void (delete_shot)(int pos) {
 
     shots_fired--;
 }
-
+/*
 void get_date() {
 
   Date date = rtc_read_date();
@@ -360,7 +368,7 @@ void get_date() {
   strcat(date_str, month);
   strcat(date_str, "/");
   strcat(date_str, year);
-}
+}*/
 
 void draw_string(const char *string, uint16_t x, uint16_t y, uint8_t scale) {
   for (unsigned int i = 0; i < strlen(string); i++) {

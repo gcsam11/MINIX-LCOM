@@ -51,7 +51,7 @@ static xpm_row_t score_xpm[] = {
 "l c #f0f0f0",
 "z c #F1F1F1",
 "x c #FEFEFE",
-"c c #000000",
+"c c #FFFFFF",
 /* pixels */
 "                                                                                                                                                                          ",
 "         +>euccccki8# otuuu-           o,wgccccdw* *uuut#            o&5uscccccgu5-            8uiu565558uuuuuuuuui51&            0iuuuy55555555555wuuuuw                 ",
