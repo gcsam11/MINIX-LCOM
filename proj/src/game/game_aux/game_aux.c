@@ -14,6 +14,18 @@ extern Sprite* shots[5];
 extern Sprite* zombies[10];
 extern Sprite* score_sprite[4];
 
+static xpm_map_t digit_xpm_array[10] = { zero_xpm,
+                                         one_xpm,
+                                         two_xpm,
+                                         three_xpm,
+                                         four_xpm,
+                                         five_xpm,
+                                         six_xpm,
+                                         seven_xpm,
+                                         eight_xpm,
+                                         nine_xpm
+                                                   };
+
 extern bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 extern uint8_t shots_fired;
