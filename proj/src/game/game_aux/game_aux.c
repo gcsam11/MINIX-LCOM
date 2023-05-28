@@ -13,18 +13,6 @@ extern Sprite* zombies[10];
 extern Sprite* score_sprite[4];
 extern Sprite* date_sprite[10];
 
-static xpm_map_t digit_xpm_array[10] = { zero_xpm,
-                                         one_xpm,
-                                         two_xpm,
-                                         three_xpm,
-                                         four_xpm,
-                                         five_xpm,
-                                         six_xpm,
-                                         seven_xpm,
-                                         eight_xpm,
-                                         nine_xpm,
-                                                   };
-
 extern bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 extern uint8_t shots_fired;
@@ -425,61 +413,6 @@ void (delete_shot)(int pos) {
     render_sprites[1 + pos] = NULL;
 
     shots_fired--;
-}
-/*
-void get_date() {
-
-  Date date = rtc_read_date();
-  char date_str[20];
-
-  char day[3];
-  char month[3];
-  char year[5];
-
-  sprintf(day, "%02d", date.day);
-  sprintf(month, "%02d", date.month);
-  sprintf(year, "%02d", date.year);
-
-  strcpy(date_str, day);
-  strcat(date_str, "/");
-  strcat(date_str, month);
-  strcat(date_str, "/");
-  strcat(date_str, year);
-}*/
-
-void draw_string(const char *string, uint16_t x, uint16_t y, uint8_t scale) {
-  for (unsigned int i = 0; i < strlen(string); i++) {
-    if (string[i] != ' ' && string[i] != '/') {
-      draw_character(string[i], x + (scale * 6 * i) , y, scale);
-    } else {
-      i++;
-      draw_character(string[i], x + (scale * 6 * i) , y, scale);
-    }
-  }
-}
-
-void draw_character(const char character, uint16_t x, uint16_t y, uint8_t scale) {
-  uint8_t *pnt = NULL;
-  uint8_t font_bpp = (font.size / (font.height * font.width));
-  unsigned char *init_pnt;
-
-  init_pnt = font.bytes;
-  
-  if (!is_alpha(character)) {
-    int num = character - '0';
-    pnt = init_pnt + (6 * num) * font_bpp;
-  } else {
-    int num = (int) character - 65;
-    if (num < 0 || num > 25) return;
-
-    if (num >=0 && num <= 14) {
-      pnt = init_pnt + (6 * (num + 1)) * font_bpp + (font.width * 7) * font_bpp;
-    } else if (num >= 15 && num <=25) {
-      pnt = init_pnt + (6 * (num - 15)) * font_bpp + (font.width * 14) * font_bpp;
-    }
-  }
-
-  vg_draw_character(font, x, y, scale, pnt);
 }
 
 void (update_score_pixmap)() {

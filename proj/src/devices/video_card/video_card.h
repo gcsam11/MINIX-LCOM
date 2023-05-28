@@ -67,9 +67,4 @@ int (vg_clear_pixel_map)(uint16_t x, uint16_t y, uint16_t xpm_image_w, uint16_t 
 */
 void (vg_draw_pixel)(uint8_t** ptr, uint32_t* color_ptr);
 
-/**
- * @brief draws character in font
-*/
-void vg_draw_character(xpm_image_t font, uint16_t x, uint16_t y, uint8_t scale, uint8_t *pnt);
-
 #endif
