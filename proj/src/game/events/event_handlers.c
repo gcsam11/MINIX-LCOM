@@ -1,6 +1,6 @@
 #include "event_handlers.h"
 
-Sprite* render_sprites[20];
+Sprite* render_sprites[21];
 
 Sprite* mouse;
 Sprite* play_button;

@@ -110,7 +110,7 @@ void (delete_shot)(int pos);
 /**
  * @brief Gets current date from RTC
 */
-void get_date();
+//void get_date();
 
 /**
  * @brief Draws string
