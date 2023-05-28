@@ -1,6 +1,6 @@
 #include "event_handlers.h"
 
-Sprite* render_sprites[20];
+Sprite* render_sprites[21];
 
 Sprite* mouse;
 Sprite* play_button;
@@ -11,12 +11,13 @@ Sprite* planthero;
 Sprite* shots[5];
 Sprite* zombies[10];
 Sprite* score_sprite[4];
+Sprite* date_sprite[10];
 
 bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 bool MOUSE_MOVING;
 
-bool WHITE1_SET = true, WHITE2_SET = true, WHITEQUIT_SET = true;
+bool WHITE1_SET = true, WHITEQUIT_SET = true;
 
 uint8_t shots_fired = 0;
 
@@ -48,11 +49,6 @@ void (kbd_event_handler)() {
             }
             else if (game_state == GAMEPLAY) {
                 clear_game_state(GAMEPLAY);
-
-                set_game_state(MENU);
-            }
-            else if (game_state == DATE) {
-                clear_game_state(DATE);
 
                 set_game_state(MENU);
             }

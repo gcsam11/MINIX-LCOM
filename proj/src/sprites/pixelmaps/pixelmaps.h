@@ -19,6 +19,7 @@
 #include "xpm_files/zombie.xpm"
 #include "xpm_files/mouse.xpm"
 
+#include "xpm_files/score.xpm"
 #include "xpm_files/0.xpm"
 #include "xpm_files/1.xpm"
 #include "xpm_files/2.xpm"
@@ -29,5 +30,6 @@
 #include "xpm_files/7.xpm"
 #include "xpm_files/8.xpm"
 #include "xpm_files/9.xpm"
+#include "xpm_files/bar.xpm"
 
 #endif

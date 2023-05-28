@@ -1,17 +1,7 @@
 #include "rtc.h"
 
-//static int rtc_hook_id;
+static int rtc_hook_id;
 
-void (wait_until_valid_rtc)() {
-    uint8_t data = 0;
-
-    do {
-        sys_outb(RTC_ADDR_REG, RTC_REG_A);
-        util_sys_inb(RTC_DATA_REG, &data);
-    } while ((data & UIP) != 0);    
-}
-
-/*
 void (rtc_ih)() {
     uint32_t regA;
 
@@ -35,78 +25,16 @@ int (rtc_unsubscribe_int)() {
     return sys_irqrmpolicy(&rtc_hook_id);
 }
 
-int (rtc_read_reg)(uint32_t addr, uint32_t* data) {
-    if (sys_outb(RTC_ADDR_REG, addr)) {return 1;}
-
-    if (sys_inb(RTC_DATA_REG, data)) {return 1;}
-
-    return 0;
+int rtc_is_binary() {
+    uint8_t result;
+    if (rtc_write_addr(11)) return 1;
+    if (rtc_read_data(&result)) return 1;
+	return result & BIT(2);
 }
 
-int (rtc_write_reg)(uint32_t addr, uint32_t data) {
-    if (sys_outb(RTC_ADDR_REG, addr)) {return 1;}
-
-    if (sys_outb(RTC_DATA_REG, data)) {return 1;}
-
-    return 0;
+uint8_t to_binary(uint8_t bcd_number) {
+    return ((bcd_number >> 4) * 10) + (bcd_number & 0xF);
 }
-
-int (bcd_to_dec)(uint16_t bcd) {
-    unsigned short MSB, LSB;
-    MSB = (bcd >> 4);
-    LSB = (bcd & 0x0F);
-
-    if (!MSB) {return LSB;}
-    else if (MSB < 8) {return 10 * MSB + LSB;}
-    else if (MSB == 8) {return 12 + LSB;}
-    else {return 22 + LSB;}
-}
-
-uint16_t (dec_to_bcd)(uint16_t dec) {
-    return (((dec / 10) << 4) + (dec % 10));
-}
-
-date_time_t get_date() {
-    date_time_t date;
-    uint32_t data;
-
-    rtc_read_reg(RTC_REG_A, &data);
-
-    if (data & UIP) {tickdelay(micros_to_ticks(UIP));}
-
-    rtc_read_reg(RTC_MONTHDAY, &data);
-    date.day = bcd_to_dec(data);
-
-    rtc_read_reg(RTC_MONTH, &data);
-    date.month = bcd_to_dec(data);
-
-    rtc_read_reg(RTC_YEAR, &data);
-    date.year = bcd_to_dec(data);
-
-    return date;
-}
-
-date_time_t get_time() {
-    date_time_t time;
-    uint32_t data;
-
-    rtc_read_reg(RTC_REG_A, &data);
-
-    if (data & UIP) {tickdelay(micros_to_ticks(UIP));}
-
-    rtc_read_reg(RTC_SEC, &data);
-    time.seconds = bcd_to_dec(data);
-
-    rtc_read_reg(RTC_MIN, &data);
-    time.minutes = bcd_to_dec(data);
-
-    rtc_read_reg(RTC_HOUR, &data);
-    time.hours = bcd_to_dec(data);
-
-    return time;
-}
-*/
-
 
 int(rtc_write_addr)(uint8_t addr) {
   return sys_outb(RTC_ADDR_REG, addr);
@@ -120,8 +48,7 @@ int(rtc_write_data)(uint8_t data) {
   return sys_outb(RTC_DATA_REG, data);
 }
 
-Date (rtc_read_date) () {
-
+Date (rtc_read_date)() {
   uint8_t reg;
   rtc_write_addr(RTC_REG_B);
   rtc_read_data(&reg);
@@ -150,5 +77,10 @@ Date (rtc_read_date) () {
   }
 
   Date date = {time[0], time[1], time[2]};
+
+  date.day = rtc_is_binary() ? time[0] : to_binary(time[0]);
+  date.month = rtc_is_binary() ? time[1] : to_binary(time[1]);
+  date.year = rtc_is_binary() ? time[2] : to_binary(time[2]);
+
   return date;
 }
