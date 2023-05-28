@@ -11,12 +11,13 @@ Sprite* planthero;
 Sprite* shots[5];
 Sprite* zombies[10];
 Sprite* score_sprite[4];
+Sprite* date_sprite[10];
 
 bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 bool MOUSE_MOVING;
 
-bool WHITE1_SET = true, WHITE2_SET = true, WHITEQUIT_SET = true;
+bool WHITE1_SET = true, WHITEQUIT_SET = true;
 
 uint8_t shots_fired = 0;
 

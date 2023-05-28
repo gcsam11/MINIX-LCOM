@@ -29,5 +29,6 @@
 #include "xpm_files/7.xpm"
 #include "xpm_files/8.xpm"
 #include "xpm_files/9.xpm"
+#include "xpm_files/bar.xpm"
 
 #endif

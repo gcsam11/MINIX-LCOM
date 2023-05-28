@@ -16,7 +16,6 @@
 enum game_state_t {
     MENU,
     GAMEPLAY,
-    DATE,
 };
 
 /**
@@ -129,5 +128,7 @@ void draw_character(const char character, uint16_t x, uint16_t y, uint8_t scale)
  * @brief Updates score on screen
 */
 void (update_score_pixmap)();
+
+void (update_date_pixmap)();
 
 #endif
