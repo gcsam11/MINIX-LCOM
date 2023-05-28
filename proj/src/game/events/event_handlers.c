@@ -11,6 +11,7 @@ Sprite* title;
 Sprite* planthero;
 Sprite* shots[5];
 Sprite* zombies[10];
+Sprite* score_sprite[4];
 
 bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
@@ -23,6 +24,8 @@ uint8_t shots_fired = 0;
 uint8_t zombies_alive;
 
 int zombies_vx = -1;
+
+uint16_t score = 0;
 
 uint8_t update_rate = FREQUENCY / FRAME_RATE;
 

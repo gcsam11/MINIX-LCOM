@@ -43,4 +43,6 @@ void (delete_zombie)(int pos);
 
 void (delete_shot)(int pos);
 
+void (update_score_pixmap)();
+
 #endif

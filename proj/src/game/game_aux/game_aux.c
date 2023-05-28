@@ -12,6 +12,7 @@ extern Sprite* title;
 extern Sprite* planthero;
 extern Sprite* shots[5];
 extern Sprite* zombies[10];
+extern Sprite* score_sprite[4];
 
 extern bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
@@ -20,6 +21,20 @@ extern uint8_t shots_fired;
 extern uint8_t zombies_alive;
 
 extern int zombies_vx;
+
+extern uint16_t score;
+
+xpm_map_t digit_xpm_array[10] = { zero_xpm,
+                                  one_xpm,
+                                  two_xpm,
+                                  three_xpm,
+                                  four_xpm,
+                                  five_xpm,
+                                  six_xpm,
+                                  seven_xpm,
+                                  eight_xpm,
+                                  nine_xpm
+                                            };
 
 extern enum game_state_t game_state;
 
@@ -105,6 +120,20 @@ void (set_game_state)(enum game_state_t state) {
 
             create_zombie_hord();
 
+            Sprite* dig1 = create_sprite(zero_xpm, 984, 0, 0, 0);
+            Sprite* dig2 = create_sprite(zero_xpm, 994, 0, 0, 0);
+            Sprite* dig3 = create_sprite(zero_xpm, 1004, 0, 0, 0);
+            Sprite* dig4 = create_sprite(zero_xpm, 1014, 0, 0, 0);
+
+            score_sprite[0] = dig1;
+            score_sprite[1] = dig2;
+            score_sprite[2] = dig3;
+            score_sprite[3] = dig4;
+            render_sprites[16] = dig1;
+            render_sprites[17] = dig2;
+            render_sprites[18] = dig3;
+            render_sprites[19] = dig4;
+
             render_frame();
 
             break;
@@ -144,6 +173,8 @@ void (clear_game_state)(enum game_state_t state) {
 
             zombies_vx = -1;
 
+            score = 0;
+
             destroy_sprite(&planthero);
             render_sprites[0] = NULL;
 
@@ -158,6 +189,15 @@ void (clear_game_state)(enum game_state_t state) {
                     delete_zombie(i);
                 }
             }
+
+            destroy_sprite(&score_sprite[0]);
+            destroy_sprite(&score_sprite[1]);
+            destroy_sprite(&score_sprite[2]);
+            destroy_sprite(&score_sprite[3]);
+            render_sprites[16] = NULL;
+            render_sprites[17] = NULL;
+            render_sprites[18] = NULL;
+            render_sprites[19] = NULL;
 
             break;
         }
@@ -178,6 +218,7 @@ void (render_frame)() {
     for (int i = 0; i < 20; i++) {
         if (render_sprites[i] != NULL) {
             draw_sprite(render_sprites[i]);
+            printf("%d\n", i);
         }
     }
 
@@ -243,6 +284,9 @@ void (manage_zombies_shot)() {
 
                         delete_shot(j);
 
+                        score += 10;
+                        update_score_pixmap();
+
                         break;
                     }
                 };
@@ -275,4 +319,20 @@ void (delete_shot)(int pos) {
     render_sprites[1 + pos] = NULL;
 
     shots_fired--;
+}
+
+void (update_score_pixmap)() {
+    uint16_t curr_score = score;
+    if (curr_score >= 0 && curr_score <= 9999) {
+        int digit;
+        int cnt = 0;
+        while (curr_score > 0) {
+            digit = curr_score % 10;
+
+            set_sprite_pixelmap(score_sprite[3 - cnt], digit_xpm_array[digit]);
+
+            curr_score /= 10;
+            cnt++;
+        }
+    }
 }
