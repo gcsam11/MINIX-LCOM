@@ -1,0 +1,4 @@
+<map id="vg_init" name="vg_init">
+<area shape="rect" id="node1" title="This funtion initiates graphics mode (GUI instead of CLI)" alt="" coords="5,5,63,32"/>
+<area shape="rect" id="node2" href="$video__card_8c.html#a8ce5079137f097c0032b2e03f1c1ba36" title="This function allocates memory necessary for the graphics." alt="" coords="111,5,267,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="create_sprite" name="create_sprite">
+<area shape="rect" id="node1" title="Creates sprite." alt="" coords="5,31,102,57"/>
+<area shape="rect" id="node2" href="$video__card_8c.html#aab0ee43a0f19c6eb0ac13b7b357649fc" title="This function returns the horizontal resolution." alt="" coords="150,5,228,32"/>
+<area shape="rect" id="node3" href="$video__card_8c.html#ae9c75eaa66222e9130dd1b299ae8b3e6" title="This function returns the vertical resolution." alt="" coords="151,56,227,83"/>
+</map>

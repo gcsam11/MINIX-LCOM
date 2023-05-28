@@ -1,0 +1,6 @@
+<map id="my_mouse_disable_data_reporting" name="my_mouse_disable_data_reporting">
+<area shape="rect" id="node1" title="This function disables Mouse data reporting." alt="" coords="5,23,171,65"/>
+<area shape="rect" id="node2" href="$mouse_8c.html#a7a769bcdab7ded10f2a9bbd77747d504" title="This function issues the control word to the keyboard, using kbc_issue_cmd()" alt="" coords="219,31,346,57"/>
+<area shape="rect" id="node3" href="$keyboard_8c.html#ac25b1c60a324616aaa0a315d8063dd9c" title="This function writes a command to the specified port." alt="" coords="394,5,506,32"/>
+<area shape="rect" id="node4" href="$utils_8c.html#a79a031a8611f5b2d6afa4158e92b0fb4" title=" " alt="" coords="554,31,645,57"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="clear_game_state" name="clear_game_state">
+<area shape="rect" id="node1" title="Checks current game state and clears the screen accordingly." alt="" coords="5,56,130,83"/>
+<area shape="rect" id="node2" href="$game__aux_8c.html#ad93cfb875b971f7d483cdf8e34b30ad4" title="Deletes shot in position pos." alt="" coords="186,5,275,32"/>
+<area shape="rect" id="node3" href="$sprite_8c.html#a0e94d62dfba87d291985097ab6338617" title="Destroys sprite pointer." alt="" coords="331,56,434,83"/>
+<area shape="rect" id="node4" href="$game__aux_8c.html#a65ea8fda0acfc9f5c7f5efc103508235" title="Deletes zombie in position pos." alt="" coords="178,107,283,133"/>
+</map>

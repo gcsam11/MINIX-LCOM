@@ -1,0 +1,9 @@
+<map id="manage_zombies_shot" name="manage_zombies_shot">
+<area shape="rect" id="node1" title="Checks for zombie collision with shots and deletes them if the collision exists." alt="" coords="5,81,161,108"/>
+<area shape="rect" id="node2" href="$sprite_8c.html#a8839c454f1c9d0f6f057bb8c37f00e23" title="Checks if two sprites are colliding." alt="" coords="209,5,358,32"/>
+<area shape="rect" id="node3" href="$game__aux_8c.html#ad93cfb875b971f7d483cdf8e34b30ad4" title="Deletes shot in position pos." alt="" coords="239,56,328,83"/>
+<area shape="rect" id="node5" href="$game__aux_8c.html#a65ea8fda0acfc9f5c7f5efc103508235" title="Deletes zombie in position pos." alt="" coords="231,107,336,133"/>
+<area shape="rect" id="node6" href="$game__aux_8c.html#a125a9774f9f152a05ff53a7b2ba6593a" title="Updates score on screen." alt="" coords="209,157,358,184"/>
+<area shape="rect" id="node4" href="$sprite_8c.html#a0e94d62dfba87d291985097ab6338617" title="Destroys sprite pointer." alt="" coords="423,81,526,108"/>
+<area shape="rect" id="node7" href="$sprite_8c.html#a4a643962ceaac932de290aa955af9d89" title="Sets sprite pixelmap." alt="" coords="406,157,543,184"/>
+</map>

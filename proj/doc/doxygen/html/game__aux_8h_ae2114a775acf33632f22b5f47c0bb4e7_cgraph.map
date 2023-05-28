@@ -1,0 +1,4 @@
+<map id="check_hero_zombies_collisions" name="check_hero_zombies_collisions">
+<area shape="rect" id="node1" title="Checks if hero sprite collides with any zombie sprites." alt="" coords="5,5,150,48"/>
+<area shape="rect" id="node2" href="$sprite_8c.html#a8839c454f1c9d0f6f057bb8c37f00e23" title="Checks if two sprites are colliding." alt="" coords="198,13,347,40"/>
+</map>

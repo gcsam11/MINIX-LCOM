@@ -1,0 +1,6 @@
+<map id="manage_shots_at_right_edge" name="manage_shots_at_right_edge">
+<area shape="rect" id="node1" title="Checks if the shots have reached the right part of the screen and deletes them if true." alt="" coords="5,31,197,57"/>
+<area shape="rect" id="node2" href="$game__aux_8c.html#ad93cfb875b971f7d483cdf8e34b30ad4" title="Deletes shot in position pos." alt="" coords="270,5,358,32"/>
+<area shape="rect" id="node4" href="$sprite_8c.html#a1bf07deff7ca909dd0c6cd3462905d82" title="Checks if sprite is at the right edge of the screen." alt="" coords="245,56,383,83"/>
+<area shape="rect" id="node3" href="$sprite_8c.html#a0e94d62dfba87d291985097ab6338617" title="Destroys sprite pointer." alt="" coords="431,5,534,32"/>
+</map>

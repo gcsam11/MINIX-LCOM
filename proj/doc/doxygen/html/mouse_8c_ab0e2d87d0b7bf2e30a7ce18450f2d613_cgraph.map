@@ -1,0 +1,6 @@
+<map id="mouse_int_handler" name="mouse_int_handler">
+<area shape="rect" id="node1" title="Mouse&#39;s interrupt handler." alt="" coords="5,31,136,57"/>
+<area shape="rect" id="node2" href="$mouse_8c.html#aa147fdd58bbf8c430e7974a8e3d13812" title="When mouse packet array has stored all the necessary bytes this functions interprets it and updates m..." alt="" coords="184,5,329,32"/>
+<area shape="rect" id="node3" href="$mouse_8c.html#a2b0cab3b65db905154df274d1841a214" title="This function reads data from the port." alt="" coords="194,56,319,83"/>
+<area shape="rect" id="node4" href="$utils_8c.html#a79a031a8611f5b2d6afa4158e92b0fb4" title=" " alt="" coords="377,56,467,83"/>
+</map>

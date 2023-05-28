@@ -1,0 +1,6 @@
+<map id="create_zombie_hord" name="create_zombie_hord">
+<area shape="rect" id="node1" title="Creates zombie hords." alt="" coords="5,31,144,57"/>
+<area shape="rect" id="node2" href="$sprite_8c.html#ac1edd3824997db0f26eb4104e11f2d1f" title="Creates sprite." alt="" coords="192,31,288,57"/>
+<area shape="rect" id="node3" href="$video__card_8c.html#aab0ee43a0f19c6eb0ac13b7b357649fc" title="This function returns the horizontal resolution." alt="" coords="336,5,414,32"/>
+<area shape="rect" id="node4" href="$video__card_8c.html#ae9c75eaa66222e9130dd1b299ae8b3e6" title="This function returns the vertical resolution." alt="" coords="337,56,413,83"/>
+</map>

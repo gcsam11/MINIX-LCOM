@@ -1,0 +1,5 @@
+<map id="draw_sprite" name="draw_sprite">
+<area shape="rect" id="node1" title="Draws sprite." alt="" coords="5,5,93,32"/>
+<area shape="rect" id="node2" href="$video__card_8c.html#aced74ab5822596212b805f16bea1f5fa" title="draws pixel map" alt="" coords="141,5,274,32"/>
+<area shape="rect" id="node3" href="$video__card_8c.html#abcc227b4c043b4d57fed6a8e2a946df3" title="draws a pixel" alt="" coords="322,5,423,32"/>
+</map>

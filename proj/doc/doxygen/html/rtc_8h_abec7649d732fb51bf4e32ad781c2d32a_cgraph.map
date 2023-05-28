@@ -1,0 +1,9 @@
+<map id="rtc_read_date" name="rtc_read_date">
+<area shape="rect" id="node1" title="This function reads the current date." alt="" coords="5,93,106,120"/>
+<area shape="rect" id="node2" href="$rtc_8c.html#a5873dc86f56c4a2a8ea8f7faf07ef798" title="This function checks if the rtc is in binary." alt="" coords="157,43,253,69"/>
+<area shape="rect" id="node3" href="$rtc_8c.html#ac8d167fce95fc4cd2b7a56bbf79987e0" title="This function reads data from port." alt="" coords="305,5,405,32"/>
+<area shape="rect" id="node5" href="$rtc_8c.html#a002c192ab7ee4a5fcc562de492d19f8f" title="This function writes to address." alt="" coords="304,68,406,95"/>
+<area shape="rect" id="node6" href="$rtc_8c.html#af907ca20c21aa8db001944d3e5d59d72" title="This function writes data to port." alt="" coords="154,144,256,171"/>
+<area shape="rect" id="node7" href="$rtc_8c.html#a891509fed13e0cac396e9c401f887d72" title="converts BCD number to binary" alt="" coords="168,195,242,221"/>
+<area shape="rect" id="node4" href="$utils_8c.html#a79a031a8611f5b2d6afa4158e92b0fb4" title=" " alt="" coords="454,5,545,32"/>
+</map>

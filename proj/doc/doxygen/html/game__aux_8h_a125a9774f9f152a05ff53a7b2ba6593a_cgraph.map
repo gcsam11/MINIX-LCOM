@@ -1,0 +1,4 @@
+<map id="update_score_pixmap" name="update_score_pixmap">
+<area shape="rect" id="node1" title="Updates score on screen." alt="" coords="5,5,154,32"/>
+<area shape="rect" id="node2" href="$sprite_8c.html#a4a643962ceaac932de290aa955af9d89" title="Sets sprite pixelmap." alt="" coords="202,5,339,32"/>
+</map>

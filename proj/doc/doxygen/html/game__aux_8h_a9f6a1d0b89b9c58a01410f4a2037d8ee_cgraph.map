@@ -1,0 +1,5 @@
+<map id="advance_zombie_hord" name="advance_zombie_hord">
+<area shape="rect" id="node1" title="Makes zombies go forward." alt="" coords="5,31,155,57"/>
+<area shape="rect" id="node2" href="$sprite_8c.html#aa3d621e8c44c7a316bb45bfff2a76090" title="Moves sprite left." alt="" coords="203,5,317,32"/>
+<area shape="rect" id="node3" href="$sprite_8c.html#a88a788ef7b72abf76b77b8577bd9dd67" title="Sets sprite y velocity." alt="" coords="211,56,309,83"/>
+</map>

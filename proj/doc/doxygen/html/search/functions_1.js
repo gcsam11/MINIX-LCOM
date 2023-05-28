@@ -1,0 +1,11 @@
+var searchData=
+[
+  ['check_5fhero_5fzombies_5fcollisions_0',['check_hero_zombies_collisions',['../game__aux_8c.html#ae2114a775acf33632f22b5f47c0bb4e7',1,'check_hero_zombies_collisions():&#160;game_aux.c'],['../game__aux_8h.html#ae2114a775acf33632f22b5f47c0bb4e7',1,'check_hero_zombies_collisions():&#160;game_aux.c']]],
+  ['check_5fsprite_5fcollision_1',['check_sprite_collision',['../sprite_8c.html#a8839c454f1c9d0f6f057bb8c37f00e23',1,'check_sprite_collision(Sprite *sp1, Sprite *sp2):&#160;sprite.c'],['../sprite_8h.html#a8839c454f1c9d0f6f057bb8c37f00e23',1,'check_sprite_collision(Sprite *sp1, Sprite *sp2):&#160;sprite.c']]],
+  ['check_5fzombies_5fat_5fleft_5fedge_2',['check_zombies_at_left_edge',['../game__aux_8c.html#acb5814495b1b8d2c0ec88b9959df776a',1,'check_zombies_at_left_edge():&#160;game_aux.c'],['../game__aux_8h.html#acb5814495b1b8d2c0ec88b9959df776a',1,'check_zombies_at_left_edge():&#160;game_aux.c']]],
+  ['check_5fzombies_5fat_5fv_5fedge_3',['check_zombies_at_v_edge',['../game__aux_8c.html#a94d815a0ac23a043c6a502aacfc6e3d8',1,'check_zombies_at_v_edge():&#160;game_aux.c'],['../game__aux_8h.html#a94d815a0ac23a043c6a502aacfc6e3d8',1,'check_zombies_at_v_edge():&#160;game_aux.c']]],
+  ['clear_5fgame_5fstate_4',['clear_game_state',['../game__aux_8c.html#a800fc5fa03f09ce9b730fbfea964e77f',1,'clear_game_state(enum game_state_t state):&#160;game_aux.c'],['../game__aux_8h.html#a800fc5fa03f09ce9b730fbfea964e77f',1,'clear_game_state(enum game_state_t state):&#160;game_aux.c']]],
+  ['clear_5fsprite_5',['clear_sprite',['../sprite_8c.html#a58376e221cc73116e4bf2b179b6c4de9',1,'clear_sprite(Sprite *sp):&#160;sprite.c'],['../sprite_8h.html#a58376e221cc73116e4bf2b179b6c4de9',1,'clear_sprite(Sprite *sp):&#160;sprite.c']]],
+  ['create_5fsprite_6',['create_sprite',['../sprite_8c.html#ac1edd3824997db0f26eb4104e11f2d1f',1,'create_sprite(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t vy):&#160;sprite.c'],['../sprite_8h.html#ac1edd3824997db0f26eb4104e11f2d1f',1,'create_sprite(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t vy):&#160;sprite.c']]],
+  ['create_5fzombie_5fhord_7',['create_zombie_hord',['../game__aux_8c.html#ad1b96e3f3209f62405622529e96d1dff',1,'create_zombie_hord():&#160;game_aux.c'],['../game__aux_8h.html#ad1b96e3f3209f62405622529e96d1dff',1,'create_zombie_hord():&#160;game_aux.c']]]
+];

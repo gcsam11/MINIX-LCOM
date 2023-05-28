@@ -1,0 +1,11 @@
+<map id="subscribe_interrupts" name="subscribe_interrupts">
+<area shape="rect" id="node1" title="Subscribes multiple interrupts." alt="" coords="5,115,144,141"/>
+<area shape="rect" id="node2" href="$keyboard_8c.html#a4ac9231a99a664d6a9f0b69767e0d707" title="This function subscribes keyboard interrupts with policies REENABLE and EXCLUSIVE." alt="" coords="210,5,336,32"/>
+<area shape="rect" id="node3" href="$mouse_8c.html#a20285aed4b3ef45812cd967532dd09db" title="This function uses irq_setpolicy to configure mouse interrupts." alt="" coords="201,56,345,83"/>
+<area shape="rect" id="node4" href="$mouse_8c.html#a18037342a938738fc44cb68640090199" title="This function enables Mouse data reporting." alt="" coords="192,107,354,149"/>
+<area shape="rect" id="node8" href="$rtc_8c.html#a967f132a239bbc5bea066be9349129ed" title="This function subscribes RTC interrupts." alt="" coords="213,173,333,200"/>
+<area shape="rect" id="node9" href="$timer_8c.html#ac57a7e1140a7e00ad95ac5488d2a671b" title="This function uses irq_setpolicy to configure timer interrupts." alt="" coords="206,224,340,251"/>
+<area shape="rect" id="node5" href="$mouse_8c.html#a7a769bcdab7ded10f2a9bbd77747d504" title="This function issues the control word to the keyboard, using kbc_issue_cmd()" alt="" coords="402,115,529,141"/>
+<area shape="rect" id="node6" href="$keyboard_8c.html#ac25b1c60a324616aaa0a315d8063dd9c" title="This function writes a command to the specified port." alt="" coords="577,89,690,116"/>
+<area shape="rect" id="node7" href="$utils_8c.html#a79a031a8611f5b2d6afa4158e92b0fb4" title=" " alt="" coords="738,115,828,141"/>
+</map>

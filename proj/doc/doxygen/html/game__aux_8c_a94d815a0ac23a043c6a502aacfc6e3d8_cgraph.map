@@ -1,0 +1,5 @@
+<map id="check_zombies_at_v_edge" name="check_zombies_at_v_edge">
+<area shape="rect" id="node1" title="Checks if zombies have reached the top or bottom part of the screen." alt="" coords="5,31,183,57"/>
+<area shape="rect" id="node2" href="$sprite_8c.html#afc664ea469aa6640ed05deaa3c438036" title="Checks if sprite is at the bottom edge of the screen." alt="" coords="231,5,384,32"/>
+<area shape="rect" id="node3" href="$sprite_8c.html#a2b66eff662d5f82febd9ed78cf5b45d0" title="Checks if sprite is at the top edge of the screen." alt="" coords="242,56,373,83"/>
+</map>

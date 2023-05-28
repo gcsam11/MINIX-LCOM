@@ -1,0 +1,4 @@
+<map id="check_zombies_at_left_edge" name="check_zombies_at_left_edge">
+<area shape="rect" id="node1" title="Checks if zombies have reached the left part of the screen." alt="" coords="5,5,195,32"/>
+<area shape="rect" id="node2" href="$sprite_8c.html#a3c734d6662d6d990f78b10e84e2e612d" title="Checks if sprite is at the left edge of the screen." alt="" coords="243,5,373,32"/>
+</map>

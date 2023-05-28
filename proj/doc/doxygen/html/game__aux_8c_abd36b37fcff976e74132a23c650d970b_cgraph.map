@@ -1,0 +1,11 @@
+<map id="unsubscribe_interrupts" name="unsubscribe_interrupts">
+<area shape="rect" id="node1" title="Unsubscribes multiple interrupts." alt="" coords="5,115,158,141"/>
+<area shape="rect" id="node2" href="$keyboard_8c.html#aee0a7b54ee426fade9c780418d110fe0" title="This function unsubscribes keyboard interrupts." alt="" coords="218,5,359,32"/>
+<area shape="rect" id="node3" href="$mouse_8c.html#a3ecf823d80520009ae5e0d76ae40a3c3" title="This function unsubscribes mouse interrupts." alt="" coords="209,56,368,83"/>
+<area shape="rect" id="node4" href="$mouse_8c.html#ab48693fbc487e80bda190a5ae2a12e6d" title="This function disables Mouse data reporting." alt="" coords="206,107,371,149"/>
+<area shape="rect" id="node8" href="$rtc_8c.html#a9d4850bb2a488644672d43287f160622" title="This function unsubscribes RTC interrupts." alt="" coords="221,173,356,200"/>
+<area shape="rect" id="node9" href="$timer_8c.html#afabd21de449be154dd65d5fdb2d8045d" title="This function unsubscribes timer interrupts." alt="" coords="214,224,363,251"/>
+<area shape="rect" id="node5" href="$mouse_8c.html#a7a769bcdab7ded10f2a9bbd77747d504" title="This function issues the control word to the keyboard, using kbc_issue_cmd()" alt="" coords="419,115,546,141"/>
+<area shape="rect" id="node6" href="$keyboard_8c.html#ac25b1c60a324616aaa0a315d8063dd9c" title="This function writes a command to the specified port." alt="" coords="594,89,707,116"/>
+<area shape="rect" id="node7" href="$utils_8c.html#a79a031a8611f5b2d6afa4158e92b0fb4" title=" " alt="" coords="755,115,845,141"/>
+</map>

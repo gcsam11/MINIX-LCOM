@@ -1,0 +1,11 @@
+<map id="update_date_pixmap" name="update_date_pixmap">
+<area shape="rect" id="node1" title=" " alt="" coords="5,119,147,145"/>
+<area shape="rect" id="node2" href="$rtc_8c.html#abec7649d732fb51bf4e32ad781c2d32a" title="This function reads the current date." alt="" coords="213,93,314,120"/>
+<area shape="rect" id="node9" href="$sprite_8c.html#a4a643962ceaac932de290aa955af9d89" title="Sets sprite pixelmap." alt="" coords="195,144,332,171"/>
+<area shape="rect" id="node3" href="$rtc_8c.html#a5873dc86f56c4a2a8ea8f7faf07ef798" title="This function checks if the rtc is in binary." alt="" coords="384,43,479,69"/>
+<area shape="rect" id="node4" href="$rtc_8c.html#ac8d167fce95fc4cd2b7a56bbf79987e0" title="This function reads data from port." alt="" coords="531,5,632,32"/>
+<area shape="rect" id="node6" href="$rtc_8c.html#a002c192ab7ee4a5fcc562de492d19f8f" title="This function writes to address." alt="" coords="530,68,633,95"/>
+<area shape="rect" id="node7" href="$rtc_8c.html#af907ca20c21aa8db001944d3e5d59d72" title="This function writes data to port." alt="" coords="380,144,482,171"/>
+<area shape="rect" id="node8" href="$rtc_8c.html#a891509fed13e0cac396e9c401f887d72" title="converts BCD number to binary" alt="" coords="394,195,468,221"/>
+<area shape="rect" id="node5" href="$utils_8c.html#a79a031a8611f5b2d6afa4158e92b0fb4" title=" " alt="" coords="681,5,771,32"/>
+</map>

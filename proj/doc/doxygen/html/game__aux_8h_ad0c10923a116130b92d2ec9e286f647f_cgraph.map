@@ -1,0 +1,9 @@
+<map id="render_frame" name="render_frame">
+<area shape="rect" id="node1" title="Clears current frame, draws loaded background and sprites present on sprite array." alt="" coords="5,81,102,108"/>
+<area shape="rect" id="node2" href="$sprite_8c.html#a812849734f8c18c703bed96e7f3685c6" title="Draws sprite." alt="" coords="177,5,264,32"/>
+<area shape="rect" id="node5" href="$video__card_8c.html#a1f8a1c48ec71ce3d4d6474f986b8c54e" title="This function is used to set memory for page flipping." alt="" coords="184,56,257,83"/>
+<area shape="rect" id="node6" href="$video__card_8c.html#a618f3c3b01d382ce1a8f88336f4ec625" title="This function clears the background frame." alt="" coords="167,107,274,133"/>
+<area shape="rect" id="node7" href="$video__card_8c.html#a21a01f3447804705ecdd03362e0327b5" title="This function draws the background that should already be loaded." alt="" coords="150,157,291,184"/>
+<area shape="rect" id="node3" href="$video__card_8c.html#aced74ab5822596212b805f16bea1f5fa" title="draws pixel map" alt="" coords="339,5,472,32"/>
+<area shape="rect" id="node4" href="$video__card_8c.html#abcc227b4c043b4d57fed6a8e2a946df3" title="draws a pixel" alt="" coords="520,5,622,32"/>
+</map>

@@ -1,0 +1,24 @@
+<map id="set_game_state" name="set_game_state">
+<area shape="rect" id="node1" title="Checks current game state and changes the screen accordingly." alt="" coords="5,183,120,209"/>
+<area shape="rect" id="node2" href="$sprite_8c.html#ac1edd3824997db0f26eb4104e11f2d1f" title="Creates sprite." alt="" coords="380,56,476,83"/>
+<area shape="rect" id="node5" href="$game__aux_8c.html#ad1b96e3f3209f62405622529e96d1dff" title="Creates zombie hords." alt="" coords="169,120,308,147"/>
+<area shape="rect" id="node6" href="$game__aux_8c.html#ad0c10923a116130b92d2ec9e286f647f" title="Clears current frame, draws loaded background and sprites present on sprite array." alt="" coords="190,183,287,209"/>
+<area shape="rect" id="node13" href="$game__aux_8c.html#a644151f07f095a441b7e9f1f1ac5bc02" title=" " alt="" coords="168,259,309,285"/>
+<area shape="rect" id="node22" href="$video__card_8c.html#a28459ea3364930e4d144eb7793861a58" title="This function is used to load the xpm for the background." alt="" coords="172,309,305,336"/>
+<area shape="rect" id="node3" href="$video__card_8c.html#aab0ee43a0f19c6eb0ac13b7b357649fc" title="This function returns the horizontal resolution." alt="" coords="574,5,652,32"/>
+<area shape="rect" id="node4" href="$video__card_8c.html#ae9c75eaa66222e9130dd1b299ae8b3e6" title="This function returns the vertical resolution." alt="" coords="575,56,651,83"/>
+<area shape="rect" id="node7" href="$sprite_8c.html#a812849734f8c18c703bed96e7f3685c6" title="Draws sprite." alt="" coords="384,107,471,133"/>
+<area shape="rect" id="node10" href="$video__card_8c.html#a1f8a1c48ec71ce3d4d6474f986b8c54e" title="This function is used to set memory for page flipping." alt="" coords="392,157,464,184"/>
+<area shape="rect" id="node11" href="$video__card_8c.html#a618f3c3b01d382ce1a8f88336f4ec625" title="This function clears the background frame." alt="" coords="374,208,481,235"/>
+<area shape="rect" id="node12" href="$video__card_8c.html#a21a01f3447804705ecdd03362e0327b5" title="This function draws the background that should already be loaded." alt="" coords="357,259,498,285"/>
+<area shape="rect" id="node8" href="$video__card_8c.html#aced74ab5822596212b805f16bea1f5fa" title="draws pixel map" alt="" coords="546,107,680,133"/>
+<area shape="rect" id="node9" href="$video__card_8c.html#abcc227b4c043b4d57fed6a8e2a946df3" title="draws a pixel" alt="" coords="728,107,830,133"/>
+<area shape="rect" id="node14" href="$rtc_8c.html#abec7649d732fb51bf4e32ad781c2d32a" title="This function reads the current date." alt="" coords="378,309,478,336"/>
+<area shape="rect" id="node21" href="$sprite_8c.html#a4a643962ceaac932de290aa955af9d89" title="Sets sprite pixelmap." alt="" coords="359,360,496,387"/>
+<area shape="rect" id="node15" href="$rtc_8c.html#a5873dc86f56c4a2a8ea8f7faf07ef798" title="This function checks if the rtc is in binary." alt="" coords="565,259,661,285"/>
+<area shape="rect" id="node16" href="$rtc_8c.html#ac8d167fce95fc4cd2b7a56bbf79987e0" title="This function reads data from port." alt="" coords="729,208,829,235"/>
+<area shape="rect" id="node18" href="$rtc_8c.html#a002c192ab7ee4a5fcc562de492d19f8f" title="This function writes to address." alt="" coords="728,284,830,311"/>
+<area shape="rect" id="node19" href="$rtc_8c.html#af907ca20c21aa8db001944d3e5d59d72" title="This function writes data to port." alt="" coords="562,360,664,387"/>
+<area shape="rect" id="node20" href="$rtc_8c.html#a891509fed13e0cac396e9c401f887d72" title="converts BCD number to binary" alt="" coords="576,411,650,437"/>
+<area shape="rect" id="node17" href="$utils_8c.html#a79a031a8611f5b2d6afa4158e92b0fb4" title=" " alt="" coords="878,208,968,235"/>
+</map>
