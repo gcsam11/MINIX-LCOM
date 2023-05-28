@@ -17,6 +17,18 @@ enum game_state_t {
     DATE,
 };
 
+static xpm_map_t digit_xpm_array[10] = { zero_xpm,
+                                         one_xpm,
+                                         two_xpm,
+                                         three_xpm,
+                                         four_xpm,
+                                         five_xpm,
+                                         six_xpm,
+                                         seven_xpm,
+                                         eight_xpm,
+                                         nine_xpm
+                                                   };
+
 int (subscribe_interrupts)();
 
 int (unsubscribe_interrupts)();

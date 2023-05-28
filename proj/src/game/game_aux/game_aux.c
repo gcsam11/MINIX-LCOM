@@ -24,18 +24,6 @@ extern int zombies_vx;
 
 extern uint16_t score;
 
-xpm_map_t digit_xpm_array[10] = { zero_xpm,
-                                  one_xpm,
-                                  two_xpm,
-                                  three_xpm,
-                                  four_xpm,
-                                  five_xpm,
-                                  six_xpm,
-                                  seven_xpm,
-                                  eight_xpm,
-                                  nine_xpm
-                                            };
-
 extern enum game_state_t game_state;
 
 uint8_t kbd_irq_set, timer_irq_set, mouse_irq_set;
