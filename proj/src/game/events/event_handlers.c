@@ -51,6 +51,11 @@ void (kbd_event_handler)() {
 
                 set_game_state(MENU);
             }
+            else if (game_state == DATE) {
+                clear_game_state(DATE);
+
+                set_game_state(MENU);
+            }
             break;
         case W_MAKECODE:
             if (game_state == GAMEPLAY) {

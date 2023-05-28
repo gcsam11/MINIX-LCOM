@@ -22,3 +22,10 @@ int(util_get_MSB)(uint16_t val, uint8_t *msb) {
   *msb = (uint8_t) (val >> 8);
   return 0;
 }
+
+bool is_alpha(char character) {
+    if ((character >= 'A' && character <= 'Z') || (character >= 'a' && character <= 'z'))
+        return true;
+
+    return false;
+}

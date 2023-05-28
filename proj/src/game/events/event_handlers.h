@@ -14,10 +14,19 @@
 #define FREQUENCY 60.0
 #define FRAME_RATE 60.0
 
+/**
+ * @brief Processes keyboard inputs for menu selections or character movement depending on game state
+*/
 void (kbd_event_handler)();
 
+/**
+ * @brief Processes mouse inputs for menu selections or mouse movement
+*/
 void (mouse_event_handler)();
 
+/**
+ * @brief Makes sprites move according to timer
+*/
 void (timer_event_handler)();
 
 #endif

@@ -15,6 +15,7 @@ Sprite* (create_sprite)(xpm_map_t xpm, int16_t x, int16_t y, int16_t vx, int16_t
 
     sp->width = img.width;
     sp->height = img.height;
+    sp->size = img.size;
 
     sp->x = x;
     sp->y = y;
