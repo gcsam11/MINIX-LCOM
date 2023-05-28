@@ -1,6 +1,6 @@
 #include "rtc.h"
 
-//static int rtc_hook_id;
+static int rtc_hook_id;
 
 void (wait_until_valid_rtc)() {
     uint8_t data = 0;
@@ -11,7 +11,7 @@ void (wait_until_valid_rtc)() {
     } while ((data & UIP) != 0);    
 }
 
-/*
+
 void (rtc_ih)() {
     uint32_t regA;
 
@@ -105,7 +105,7 @@ date_time_t get_time() {
 
     return time;
 }
-*/
+
 
 
 int(rtc_write_addr)(uint8_t addr) {
