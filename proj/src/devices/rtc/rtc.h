@@ -7,15 +7,10 @@
 #include "rtc_macros.h"
 
 typedef struct {
-    uint32_t seconds;
-    uint32_t minutes;
-    uint32_t hours;
-    uint32_t day;
-    uint32_t month;
-    uint32_t year;
-} date_time_t;
-
-void (wait_until_valid_rtc)();
+  uint8_t day;
+  uint8_t month;
+  uint8_t year;
+} Date;
 
 void (rtc_ih)();
 
@@ -23,8 +18,15 @@ int (rtc_subscribe_int)(uint32_t *bit_no);
 
 int (rtc_unsubscribe_int)();
 
-int (rtc_read_reg)(uint32_t addr, uint32_t *data);
+int rtc_is_binary();
+uint8_t to_binary(uint8_t bcd_number);
 
-int (rtc_write_reg)(uint32_t addr, uint32_t data);
+int(rtc_write_addr)(uint8_t addr);
+
+int(rtc_read_data)(uint8_t *data);
+
+int(rtc_write_data)(uint8_t data);
+
+Date (rtc_read_date) ();
 
 #endif

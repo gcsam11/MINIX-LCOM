@@ -4,7 +4,6 @@ Sprite* render_sprites[20];
 
 Sprite* mouse;
 Sprite* play_button;
-Sprite* date_button;
 Sprite* quit_button;
 Sprite* title;
 
@@ -12,12 +11,13 @@ Sprite* planthero;
 Sprite* shots[5];
 Sprite* zombies[10];
 Sprite* score_sprite[4];
+Sprite* date_sprite[10];
 
 bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
 bool MOUSE_MOVING;
 
-bool WHITE1_SET = true, WHITE2_SET = true, WHITEQUIT_SET = true;
+bool WHITE1_SET = true, WHITEQUIT_SET = true;
 
 uint8_t shots_fired = 0;
 
@@ -132,14 +132,6 @@ void (kbd_event_handler)() {
                 set_game_state(GAMEPLAY);
             }
             break;
-        
-        case TWO_MAKECODE:
-            if (game_state == MENU) {
-                clear_game_state(MENU);
-
-                set_game_state(DATE);
-            }
-            break;
 
         default:
             break;
@@ -164,15 +156,6 @@ void (mouse_event_handler)() {
                 clear_game_state(MENU);
 
                 set_game_state(GAMEPLAY);
-
-                return;
-            }
-
-            bool collided_date = check_sprite_collision(mouse, date_button);
-            if (collided_date) {
-                clear_game_state(MENU);
-
-                set_game_state(DATE);
 
                 return;
             }
@@ -217,17 +200,6 @@ void (timer_event_handler)() {
                     if (!WHITE1_SET) {
                         set_sprite_pixelmap(play_button, play_white_xpm);
                         WHITE1_SET = true;
-                    }
-                }
-
-                bool collided_date = check_sprite_collision(mouse, date_button);
-                if (collided_date) {
-                    set_sprite_pixelmap(date_button, date_yellow_xpm);
-                    WHITE2_SET = false;
-                } else {
-                    if (!WHITE2_SET) {
-                        set_sprite_pixelmap(date_button, date_white_xpm);
-                        WHITE2_SET = true;
                     }
                 }
                         

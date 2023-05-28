@@ -7,6 +7,7 @@
 #include "../../devices/keyboard/keyboard.h"
 #include "../../devices/mouse/mouse.h"
 #include "../../devices/timer/timer.h"
+#include "../../devices/rtc/rtc.h"
 #include "../../devices/video_card/video_card.h"
 #include "../../sprites/sprite.h"
 #include "../../sprites/pixelmaps/pixelmaps.h"
@@ -14,7 +15,6 @@
 enum game_state_t {
     MENU,
     GAMEPLAY,
-    DATE,
 };
 
 int (subscribe_interrupts)();
@@ -44,5 +44,7 @@ void (delete_zombie)(int pos);
 void (delete_shot)(int pos);
 
 void (update_score_pixmap)();
+
+void (update_date_pixmap)();
 
 #endif

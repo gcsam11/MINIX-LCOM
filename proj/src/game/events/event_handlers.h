@@ -7,6 +7,7 @@
 #include "../game_aux/game_aux.h"
 #include "../../devices/keyboard/keyboard.h"
 #include "../../devices/mouse/mouse.h"
+#include "../../devices/rtc/rtc.h"
 #include "../../devices/timer/timer.h"
 #include "../../sprites/sprite.h"
 #include "../../sprites/pixelmaps/pixelmaps.h"

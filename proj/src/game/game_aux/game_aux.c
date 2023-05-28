@@ -4,15 +4,14 @@ extern Sprite* render_sprites[20];
 
 extern Sprite* mouse;
 extern Sprite* play_button;
-extern Sprite* date_button;
 extern Sprite* quit_button;
 extern Sprite* title;
-
 
 extern Sprite* planthero;
 extern Sprite* shots[5];
 extern Sprite* zombies[10];
 extern Sprite* score_sprite[4];
+extern Sprite* date_sprite[10];
 
 static xpm_map_t digit_xpm_array[10] = { zero_xpm,
                                          one_xpm,
@@ -23,7 +22,7 @@ static xpm_map_t digit_xpm_array[10] = { zero_xpm,
                                          six_xpm,
                                          seven_xpm,
                                          eight_xpm,
-                                         nine_xpm
+                                         nine_xpm,
                                                    };
 
 extern bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
@@ -39,6 +38,7 @@ extern uint16_t score;
 extern enum game_state_t game_state;
 
 uint8_t kbd_irq_set, timer_irq_set, mouse_irq_set;
+uint32_t rtc_irq_set;
 
 int (subscribe_interrupts)() {
 
@@ -62,10 +62,20 @@ int (subscribe_interrupts)() {
         return 1;
     }
 
+    if (rtc_subscribe_int(&rtc_irq_set) != OK) {
+        printf("FAILED TO SUBSCRIBE RTC\n");
+        return 1;
+    }
+
     return 0;
 }
 
 int (unsubscribe_interrupts)() {
+
+    if (rtc_unsubscribe_int() != OK) {
+        printf("FAILED TO UNSUBSCRIBE RTC\n");
+        return 1;
+    }
 
     if (mouse_unsubscribe_int() != OK) {
         printf("FAILED TO UNSUBSCRIBE MOUSE\n");
@@ -97,15 +107,47 @@ void (set_game_state)(enum game_state_t state) {
 
             title = create_sprite(title_xpm, 175, 117, 0, 0);
             play_button = create_sprite(play_white_xpm, 368, 297, 0, 0);
-            date_button = create_sprite(date_white_xpm, 354, 397, 0, 0);
-            quit_button = create_sprite(quit_white_xpm, 306, 497, 0, 0);
+            quit_button = create_sprite(quit_white_xpm, 306, 397, 0, 0);
             mouse = create_sprite(mouse_xpm, 518, 384, 0, 0);
 
             render_sprites[0] = title;
             render_sprites[1] = play_button;
-            render_sprites[2] = date_button;
-            render_sprites[3] = quit_button;
-            render_sprites[4] = mouse;
+            render_sprites[2] = quit_button;
+            render_sprites[3] = mouse;
+
+            Sprite* dig1 = create_sprite(zero_xpm, 775, 738, 0, 0);
+            Sprite* dig2 = create_sprite(zero_xpm, 800, 738, 0, 0);
+            Sprite* dig3 = create_sprite(bar_xpm, 825, 738, 0, 0);
+            Sprite* dig4 = create_sprite(zero_xpm, 850, 738, 0, 0);
+            Sprite* dig5 = create_sprite(zero_xpm, 875, 738, 0, 0);
+            Sprite* dig6 = create_sprite(bar_xpm, 900, 738, 0, 0);
+            Sprite* dig7 = create_sprite(two_xpm, 925, 738, 0, 0);
+            Sprite* dig8 = create_sprite(zero_xpm, 950, 738, 0, 0);
+            Sprite* dig9 = create_sprite(zero_xpm, 975, 738, 0, 0);
+            Sprite* dig10 = create_sprite(zero_xpm, 1000, 738, 0, 0);
+
+            date_sprite[0] = dig1;
+            date_sprite[1] = dig2;
+            date_sprite[2] = dig3;
+            date_sprite[3] = dig4;
+            date_sprite[4] = dig5;
+            date_sprite[5] = dig6;
+            date_sprite[6] = dig7;
+            date_sprite[7] = dig8;
+            date_sprite[8] = dig9;
+            date_sprite[9] = dig10;
+            render_sprites[4] = dig1;
+            render_sprites[5] = dig2;
+            render_sprites[6] = dig3;
+            render_sprites[7] = dig4;
+            render_sprites[8] = dig5;
+            render_sprites[9] = dig6;
+            render_sprites[10] = dig7;
+            render_sprites[11] = dig8;
+            render_sprites[12] = dig9;
+            render_sprites[13] = dig10;
+
+            update_date_pixmap();
 
             render_frame();
             
@@ -138,9 +180,6 @@ void (set_game_state)(enum game_state_t state) {
 
             break;
         }
-        case DATE: {
-            break;
-        }
         
         default:
             break;
@@ -156,12 +195,31 @@ void (clear_game_state)(enum game_state_t state) {
             render_sprites[0] = NULL;
             destroy_sprite(&play_button);
             render_sprites[1] = NULL;
-            destroy_sprite(&date_button);
-            render_sprites[2] = NULL;
             destroy_sprite(&quit_button);
-            render_sprites[3] = NULL;
+            render_sprites[2] = NULL;
             destroy_sprite(&mouse);
+            render_sprites[3] = NULL;
+
+            destroy_sprite(&date_sprite[0]);
+            destroy_sprite(&date_sprite[1]);
+            destroy_sprite(&date_sprite[2]);
+            destroy_sprite(&date_sprite[3]);
+            destroy_sprite(&date_sprite[4]);
+            destroy_sprite(&date_sprite[5]);
+            destroy_sprite(&date_sprite[6]);
+            destroy_sprite(&date_sprite[7]);
+            destroy_sprite(&date_sprite[8]);
+            destroy_sprite(&date_sprite[9]);
             render_sprites[4] = NULL;
+            render_sprites[5] = NULL;
+            render_sprites[6] = NULL;
+            render_sprites[7] = NULL;
+            render_sprites[8] = NULL;
+            render_sprites[9] = NULL;
+            render_sprites[10] = NULL;
+            render_sprites[11] = NULL;
+            render_sprites[12] = NULL;
+            render_sprites[13] = NULL;
             
             break;
         }
@@ -199,9 +257,6 @@ void (clear_game_state)(enum game_state_t state) {
             render_sprites[18] = NULL;
             render_sprites[19] = NULL;
 
-            break;
-        }
-        case DATE: {
             break;
         }
         
@@ -335,4 +390,42 @@ void (update_score_pixmap)() {
             cnt++;
         }
     }
+}
+
+void (update_date_pixmap)() {
+
+    Date date = rtc_read_date();
+
+    int digit;
+    int cnt = 0;
+    int day = date.day;
+    int month = date.month;
+    int year = date.year;
+
+    while (day > 0) {
+        digit = day % 10;
+
+        set_sprite_pixelmap(date_sprite[1 - cnt], digit_xpm_array[digit]);
+
+        day /= 10;
+        cnt++;
+    }
+    cnt = 0;
+    while (month > 0) {
+        digit = month % 10;
+
+        set_sprite_pixelmap(date_sprite[4 - cnt], digit_xpm_array[digit]);
+
+        month /= 10;
+        cnt++;
+    }
+    cnt=0;
+    while (year > 0) {
+        digit = year % 10;
+
+        set_sprite_pixelmap(date_sprite[9 - cnt], digit_xpm_array[digit]);
+
+        year /= 10;
+        cnt++;
+    }  
 }
