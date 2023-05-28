@@ -54,8 +54,20 @@ void (set_sprite_pixelmap)(Sprite* sp, xpm_map_t new_xpm) {
     sp->height = img.height;
 }
 
-bool (sprite_at_left_edge)(Sprite* sp) {
+bool (sprite_at_right_edge)(Sprite* sp) {
     return sp->x == sp->max_x;
+}
+
+bool (sprite_at_left_edge)(Sprite* sp) {
+    return sp->x == 0;
+}
+
+bool (sprite_at_top_edge)(Sprite* sp) {
+    return sp->y == 0;
+}
+
+bool (sprite_at_bottom_edge)(Sprite* sp) {
+    return sp->y == sp->max_y;
 }
 
 void (update_sprite_position)(Sprite* sp) {
@@ -66,6 +78,12 @@ void (update_sprite_position)(Sprite* sp) {
     if (sp->x < sp->min_x) sp->x = sp->min_x;
     if (sp->y > sp->max_y) sp->y = sp->max_y;
     if (sp->y < sp->min_y) sp->y = sp->min_y;
+}
+
+void (move_sprite_left)(Sprite* sp, uint16_t dis) {
+    sp->x -= dis;
+    
+    if (sp->x < sp->min_x) sp->x = sp->min_x;
 }
 
 bool (check_sprite_collision)(Sprite* sp1, Sprite* sp2) {

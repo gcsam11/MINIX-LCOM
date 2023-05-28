@@ -31,13 +31,19 @@ void (create_zombie_hord)();
 
 bool (check_hero_zombies_collisions)();
 
+bool (check_zombies_at_left_edge)();
+
+bool (check_zombies_at_v_edge)();
+
 void (update_shots)();
 
 void (update_zombies)();
 
+void (advance_zombie_hord)();
+
 void (manage_zombies_shot)();
 
-void (manage_shots_at_edge)();
+void (manage_shots_at_right_edge)();
 
 void (delete_zombie)(int pos);
 

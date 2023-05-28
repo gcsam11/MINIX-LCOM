@@ -4,7 +4,6 @@ Sprite* render_sprites[20];
 
 Sprite* mouse;
 Sprite* play_button;
-Sprite* date_button;
 Sprite* quit_button;
 Sprite* title;
 
@@ -23,7 +22,11 @@ uint8_t shots_fired = 0;
 
 uint8_t zombies_alive;
 
-int zombies_vx = -1;
+int16_t hero_v = 5;
+
+int zombies_vx = -50;
+
+int zombies_vy = 1;
 
 uint16_t score = 0;
 
@@ -52,28 +55,28 @@ void (kbd_event_handler)() {
         case W_MAKECODE:
             if (game_state == GAMEPLAY) {
                 W_ISPRESSED = true;
-                set_sprite_vy(planthero, -5);
+                set_sprite_vy(planthero, -hero_v);
             }
             break;
 
         case A_MAKECODE:
             if (game_state == GAMEPLAY) {
                 A_ISPRESSED = true;
-                set_sprite_vx(planthero, -5);
+                set_sprite_vx(planthero, -hero_v);
             }
             break;
 
         case S_MAKECODE:
             if (game_state == GAMEPLAY) {
                 S_ISPRESSED = true;
-                set_sprite_vy(planthero, 5);
+                set_sprite_vy(planthero, hero_v);
             }
             break;
 
         case D_MAKECODE:
             if (game_state == GAMEPLAY) {
                 D_ISPRESSED = true;
-                set_sprite_vx(planthero, 5);
+                set_sprite_vx(planthero, hero_v);
             }
             break;
 
@@ -82,7 +85,7 @@ void (kbd_event_handler)() {
                 W_ISPRESSED = false;
 
                 if (S_ISPRESSED) {
-                    set_sprite_vy(planthero, 5);
+                    set_sprite_vy(planthero, hero_v);
                 } else {
                     set_sprite_vy(planthero, 0);
                 }
@@ -94,7 +97,7 @@ void (kbd_event_handler)() {
                 A_ISPRESSED = false;
 
                 if (D_ISPRESSED) {
-                    set_sprite_vx(planthero, 5);
+                    set_sprite_vx(planthero, hero_v);
                 } else {
                     set_sprite_vx(planthero, 0);
                 }
@@ -106,7 +109,7 @@ void (kbd_event_handler)() {
                 S_ISPRESSED = false;
 
                 if (W_ISPRESSED) {
-                    set_sprite_vy(planthero, -5);
+                    set_sprite_vy(planthero, -hero_v);
                 } else {
                     set_sprite_vy(planthero, 0);
                 }
@@ -118,7 +121,7 @@ void (kbd_event_handler)() {
                 D_ISPRESSED = false;
 
                 if (A_ISPRESSED) {
-                    set_sprite_vx(planthero, -5);
+                    set_sprite_vx(planthero, -hero_v);
                 } else {
                     set_sprite_vx(planthero, 0);
                 }
@@ -130,14 +133,6 @@ void (kbd_event_handler)() {
                 clear_game_state(MENU);
 
                 set_game_state(GAMEPLAY);
-            }
-            break;
-        
-        case TWO_MAKECODE:
-            if (game_state == MENU) {
-                clear_game_state(MENU);
-
-                set_game_state(DATE);
             }
             break;
 
@@ -164,15 +159,6 @@ void (mouse_event_handler)() {
                 clear_game_state(MENU);
 
                 set_game_state(GAMEPLAY);
-
-                return;
-            }
-
-            bool collided_date = check_sprite_collision(mouse, date_button);
-            if (collided_date) {
-                clear_game_state(MENU);
-
-                set_game_state(DATE);
 
                 return;
             }
@@ -219,17 +205,6 @@ void (timer_event_handler)() {
                         WHITE1_SET = true;
                     }
                 }
-
-                bool collided_date = check_sprite_collision(mouse, date_button);
-                if (collided_date) {
-                    set_sprite_pixelmap(date_button, date_yellow_xpm);
-                    WHITE2_SET = false;
-                } else {
-                    if (!WHITE2_SET) {
-                        set_sprite_pixelmap(date_button, date_white_xpm);
-                        WHITE2_SET = true;
-                    }
-                }
                         
                 bool collided_quit = check_sprite_collision(mouse, quit_button);
                 if (collided_quit) {
@@ -252,7 +227,7 @@ void (timer_event_handler)() {
 
             update_zombies();
 
-            if (check_hero_zombies_collisions() == true) {
+            if (check_hero_zombies_collisions() || check_zombies_at_left_edge()) {
                 clear_game_state(GAMEPLAY);
 
                 set_game_state(MENU);
@@ -260,16 +235,21 @@ void (timer_event_handler)() {
                 return;
             }
 
+            if (check_zombies_at_v_edge()) {
+                advance_zombie_hord();
+            }
+
             update_shots();
 
             manage_zombies_shot();
 
             if (zombies_alive == 0) {
+                hero_v += hero_v > 0 ? 1 : -1;
+                zombies_vy += zombies_vy > 0 ? 2 : -2;
                 create_zombie_hord();
-                zombies_vx *= 2;
             }
 
-            manage_shots_at_edge();
+            manage_shots_at_right_edge();
 
             render_frame();
         }
