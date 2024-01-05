@@ -69,7 +69,7 @@ void* (vg_init)(uint16_t mode) {
   my_vbe_get_mode_info(mode, &vmi_p);
 
   unsigned int front_buffer_base;
-  unsigned int back_buffer_base;
+  unsigned int back_buffer1_base;
   unsigned int back_buffer2_base;
 
   h_res = vmi_p.XResolution;
@@ -79,8 +79,8 @@ void* (vg_init)(uint16_t mode) {
 
   front_buffer_base = vmi_p.PhysBasePtr;
   vram_size = h_res * v_res * bytesPerPixel;
-  back_buffer_base = front_buffer_base + vram_size;
-  back_buffer2_base = back_buffer_base + vram_size;
+  back_buffer1_base = front_buffer_base + vram_size;
+  back_buffer2_base = back_buffer1_base + vram_size;
 
   /* MAP MEMORY */
   struct minix_mem_range mr;
@@ -95,7 +95,7 @@ void* (vg_init)(uint16_t mode) {
   }
 
   front_buffer = vm_map_phys(SELF, (void *)mr.mr_base, vram_size);
-  back_buffer1 = vm_map_phys(SELF, (void *)((phys_bytes)back_buffer_base), vram_size);
+  back_buffer1 = vm_map_phys(SELF, (void *)((phys_bytes)back_buffer1_base), vram_size);
   back_buffer2 = vm_map_phys(SELF, (void *)((phys_bytes)back_buffer2_base), vram_size);
 
   if(front_buffer == MAP_FAILED || back_buffer1 == MAP_FAILED || back_buffer2 == MAP_FAILED) {

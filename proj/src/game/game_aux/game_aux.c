@@ -6,12 +6,12 @@ extern Sprite* mouse;
 extern Sprite* play_button;
 extern Sprite* quit_button;
 extern Sprite* title;
+extern Sprite* date_sprite[10];
 
 extern Sprite* planthero;
 extern Sprite* shots[5];
 extern Sprite* zombies[10];
 extern Sprite* score_sprite[4];
-extern Sprite* date_sprite[10];
 
 extern bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
@@ -19,31 +19,19 @@ extern uint8_t shots_fired;
 
 extern uint8_t zombies_alive;
 
-extern int zombies_vy;
+extern int hero_v;
 
-extern int16_t hero_v;
+extern int zombies_vy;
 
 extern uint16_t score;
 
 extern enum game_state_t game_state;
 
 uint8_t kbd_irq_set, timer_irq_set, mouse_irq_set;
-uint32_t rtc_irq_set;
 
-static const xpm_map_t digit_xpm_array[10] = { zero_xpm,
-                                               one_xpm,
-                                               two_xpm,
-                                               three_xpm,
-                                               four_xpm,
-                                               five_xpm,
-                                               six_xpm,
-                                               seven_xpm,
-                                               eight_xpm,
-                                               nine_xpm
-                                                         };
+static const xpm_map_t digit_xpm_array[10] = {zero_xpm, one_xpm, two_xpm, three_xpm, four_xpm, five_xpm, six_xpm, seven_xpm, eight_xpm, nine_xpm};
 
 int (subscribe_interrupts)() {
-
     if(timer_subscribe_int(&timer_irq_set) != OK) {
         printf("FAILED TO SUBSCRIBE KEYBOARD\n");
         return 1;
@@ -64,21 +52,10 @@ int (subscribe_interrupts)() {
         return 1;
     }
 
-    if (rtc_subscribe_int(&rtc_irq_set) != OK) {
-        printf("FAILED TO SUBSCRIBE RTC\n");
-        return 1;
-    }
-
     return 0;
 }
 
 int (unsubscribe_interrupts)() {
-
-    if (rtc_unsubscribe_int() != OK) {
-        printf("FAILED TO UNSUBSCRIBE RTC\n");
-        return 1;
-    }
-
     if (mouse_unsubscribe_int() != OK) {
         printf("FAILED TO UNSUBSCRIBE MOUSE\n");
         return 1;
@@ -117,37 +94,37 @@ void (set_game_state)(enum game_state_t state) {
             render_sprites[2] = quit_button;
             render_sprites[3] = mouse;
 
-            Sprite* dig1 = create_sprite(zero_xpm, 775, 738, 0, 0);
-            Sprite* dig2 = create_sprite(zero_xpm, 800, 738, 0, 0);
-            Sprite* dig3 = create_sprite(bar_xpm, 825, 738, 0, 0);
-            Sprite* dig4 = create_sprite(zero_xpm, 850, 738, 0, 0);
-            Sprite* dig5 = create_sprite(zero_xpm, 875, 738, 0, 0);
-            Sprite* dig6 = create_sprite(bar_xpm, 900, 738, 0, 0);
-            Sprite* dig7 = create_sprite(two_xpm, 925, 738, 0, 0);
-            Sprite* dig8 = create_sprite(zero_xpm, 950, 738, 0, 0);
-            Sprite* dig9 = create_sprite(zero_xpm, 975, 738, 0, 0);
-            Sprite* dig10 = create_sprite(zero_xpm, 1000, 738, 0, 0);
+            Sprite* d1 = create_sprite(zero_xpm, 775, 738, 0, 0);
+            Sprite* d2 = create_sprite(zero_xpm, 800, 738, 0, 0);
+            Sprite* slash1 = create_sprite(bar_xpm, 825, 738, 0, 0);
+            Sprite* m1 = create_sprite(zero_xpm, 850, 738, 0, 0);
+            Sprite* m2 = create_sprite(zero_xpm, 875, 738, 0, 0);
+            Sprite* slash2 = create_sprite(bar_xpm, 900, 738, 0, 0);
+            Sprite* y1 = create_sprite(two_xpm, 925, 738, 0, 0);
+            Sprite* y2 = create_sprite(zero_xpm, 950, 738, 0, 0);
+            Sprite* y3 = create_sprite(zero_xpm, 975, 738, 0, 0);
+            Sprite* y4 = create_sprite(zero_xpm, 1000, 738, 0, 0);
 
-            date_sprite[0] = dig1;
-            date_sprite[1] = dig2;
-            date_sprite[2] = dig3;
-            date_sprite[3] = dig4;
-            date_sprite[4] = dig5;
-            date_sprite[5] = dig6;
-            date_sprite[6] = dig7;
-            date_sprite[7] = dig8;
-            date_sprite[8] = dig9;
-            date_sprite[9] = dig10;
-            render_sprites[4] = dig1;
-            render_sprites[5] = dig2;
-            render_sprites[6] = dig3;
-            render_sprites[7] = dig4;
-            render_sprites[8] = dig5;
-            render_sprites[9] = dig6;
-            render_sprites[10] = dig7;
-            render_sprites[11] = dig8;
-            render_sprites[12] = dig9;
-            render_sprites[13] = dig10;
+            date_sprite[0] = d1;
+            date_sprite[1] = d2;
+            date_sprite[2] = slash1;
+            date_sprite[3] = m1;
+            date_sprite[4] = m2;
+            date_sprite[5] = slash2;
+            date_sprite[6] = y1;
+            date_sprite[7] = y2;
+            date_sprite[8] = y3;
+            date_sprite[9] = y4;
+            render_sprites[4] = d1;
+            render_sprites[5] = d2;
+            render_sprites[6] = slash1;
+            render_sprites[7] = m1;
+            render_sprites[8] = m2;
+            render_sprites[9] = slash2;
+            render_sprites[10] = y1;
+            render_sprites[11] = y2;
+            render_sprites[12] = y3;
+            render_sprites[13] = y4;
 
             update_date_pixmap();
 
@@ -196,13 +173,9 @@ void (clear_game_state)(enum game_state_t state) {
     switch (state) {
         case MENU: {
             destroy_sprite(&title);
-            render_sprites[0] = NULL;
             destroy_sprite(&play_button);
-            render_sprites[1] = NULL;
             destroy_sprite(&quit_button);
-            render_sprites[2] = NULL;
             destroy_sprite(&mouse);
-            render_sprites[3] = NULL;
 
             destroy_sprite(&date_sprite[0]);
             destroy_sprite(&date_sprite[1]);
@@ -214,16 +187,8 @@ void (clear_game_state)(enum game_state_t state) {
             destroy_sprite(&date_sprite[7]);
             destroy_sprite(&date_sprite[8]);
             destroy_sprite(&date_sprite[9]);
-            render_sprites[4] = NULL;
-            render_sprites[5] = NULL;
-            render_sprites[6] = NULL;
-            render_sprites[7] = NULL;
-            render_sprites[8] = NULL;
-            render_sprites[9] = NULL;
-            render_sprites[10] = NULL;
-            render_sprites[11] = NULL;
-            render_sprites[12] = NULL;
-            render_sprites[13] = NULL;
+            
+            memset(render_sprites, 0, sizeof(render_sprites));
             
             break;
         }
@@ -239,7 +204,6 @@ void (clear_game_state)(enum game_state_t state) {
             score = 0;
 
             destroy_sprite(&planthero);
-            render_sprites[0] = NULL;
 
             for (int i = 0; i < 5; i++) {
                 if(shots[i] != NULL) {
@@ -260,10 +224,7 @@ void (clear_game_state)(enum game_state_t state) {
             destroy_sprite(&score_sprite[2]);
             destroy_sprite(&score_sprite[3]);
 
-            render_sprites[17] = NULL;
-            render_sprites[18] = NULL;
-            render_sprites[19] = NULL;
-            render_sprites[20] = NULL;
+            memset(render_sprites, 0, sizeof(render_sprites));
 
             break;
         }
@@ -432,7 +393,6 @@ void (update_score_pixmap)() {
 }
 
 void (update_date_pixmap)() {
-
     Date date = rtc_read_date();
 
     int digit;
@@ -449,7 +409,9 @@ void (update_date_pixmap)() {
         day /= 10;
         cnt++;
     }
+
     cnt = 0;
+    
     while (month > 0) {
         digit = month % 10;
 
@@ -458,7 +420,9 @@ void (update_date_pixmap)() {
         month /= 10;
         cnt++;
     }
+
     cnt=0;
+
     while (year > 0) {
         digit = year % 10;
 

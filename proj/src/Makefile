@@ -1,5 +1,5 @@
 # name of the program (Minix service)
-PROG=proj
+PROG = proj
 
 .PATH: devices devices/keyboard devices/mouse devices/rtc devices/timer devices/video_card game game/game_aux game/events sprites sprites/pixelmaps
 

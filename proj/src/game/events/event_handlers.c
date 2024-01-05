@@ -6,12 +6,12 @@ Sprite* mouse;
 Sprite* play_button;
 Sprite* quit_button;
 Sprite* title;
+Sprite* date_sprite[10];
 
 Sprite* planthero;
 Sprite* shots[5];
 Sprite* zombies[10];
 Sprite* score_sprite[4];
-Sprite* date_sprite[10];
 
 bool W_ISPRESSED, A_ISPRESSED, S_ISPRESSED, D_ISPRESSED;
 
@@ -23,7 +23,7 @@ uint8_t shots_fired = 0;
 
 uint8_t zombies_alive;
 
-int16_t hero_v = 5;
+int hero_v = 5;
 
 int zombies_vx = -50;
 
@@ -224,10 +224,6 @@ void (timer_event_handler)() {
             }
         }
         else if (game_state == GAMEPLAY) {
-            update_sprite_position(planthero);
-
-            update_zombies();
-
             if (check_hero_zombies_collisions() || check_zombies_at_left_edge()) {
                 clear_game_state(GAMEPLAY);
 
@@ -240,8 +236,6 @@ void (timer_event_handler)() {
                 advance_zombie_hord();
             }
 
-            update_shots();
-
             manage_zombies_shot();
 
             if (zombies_alive == 0) {
@@ -251,6 +245,12 @@ void (timer_event_handler)() {
             }
 
             manage_shots_at_right_edge();
+
+            update_sprite_position(planthero);
+
+            update_zombies();
+
+            update_shots();
 
             render_frame();
         }

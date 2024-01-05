@@ -12,27 +12,6 @@ typedef struct {
   uint8_t year;
 } Date;
 
-/**
- * @brief RTC's interrupt handler
-*/
-void (rtc_ih)();
-
-/**
- * @brief This function subscribes RTC interrupts
- * @return Returns 0 if case of success, 1 if otherwise
-*/
-int (rtc_subscribe_int)(uint32_t *bit_no);
-
-/**
- * @brief This function unsubscribes RTC interrupts
- * @return Returns 0 if case of success, 1 if otherwise
-*/
-int (rtc_unsubscribe_int)();
-
-/**
- * @brief This function checks if the rtc is in binary
- * @returns Returns true if binary, false if not
-*/
 int (rtc_is_binary)();
 
 /**
@@ -65,6 +44,6 @@ int (rtc_write_data)(uint8_t data);
  * @brief This function reads the current date 
  * @return Returns the date
 */
-Date (rtc_read_date) ();
+Date (rtc_read_date)();
 
 #endif
